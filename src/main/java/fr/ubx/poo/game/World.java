@@ -5,6 +5,7 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.Stone;
 
 import java.util.Collection;
 import java.util.Map;
@@ -60,6 +61,16 @@ public class World {
     }
 
     public boolean isEmpty(Position position) {
-        return grid.get(position) == null;
+        WorldEntity Stone= WorldEntity.Stone;
+        WorldEntity Tree= WorldEntity.Stone;
+        WorldEntity Box= WorldEntity.Box;
+        if(raw[position.y][position.x].equals(Stone) || raw[position.y][position.x].equals(Tree)){
+            return false;
+        }
+        if(raw[position.y][position.x].equals(Box) ){
+            return false;
+        }
+
+        return true;//grid.get(position) == null;
     }
 }

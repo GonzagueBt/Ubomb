@@ -11,8 +11,7 @@ import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
 public class Player extends GameObject implements Movable {
-
-    private final boolean alive = true;
+    private boolean alive = true;
     Direction direction;
     private boolean moveRequested = false;
     private int lives = 1;
@@ -41,7 +40,7 @@ public class Player extends GameObject implements Movable {
 
     @Override
     public boolean canMove(Direction direction) {
-        if(!game.getWorld().isInside(direction.nextPosition(getPosition()))){
+        if(!game.getWorld().isInside(direction.nextPosition(getPosition()))|| !game.getWorld().isEmpty(direction.nextPosition(getPosition()))){
             return false;
         }
         return true;
