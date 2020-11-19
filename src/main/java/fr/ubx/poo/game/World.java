@@ -33,6 +33,10 @@ public class World {
         throw new PositionNotFoundException("Player");
     }
 
+    public WorldEntity[][] getRaw() {
+        return raw;
+    }
+
     public Decor get(Position position) {
         return grid.get(position);
     }

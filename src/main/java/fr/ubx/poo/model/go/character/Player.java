@@ -6,6 +6,7 @@ package fr.ubx.poo.model.go.character;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
+import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
@@ -48,6 +49,9 @@ public class Player extends GameObject implements Movable {
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
+        if(game.getWorld().getRaw()[nextPos.y][nextPos.x].equals(WorldEntity.Princess)){
+            this.winner=true;
+        }
         setPosition(nextPos);
     }
 
@@ -65,6 +69,9 @@ public class Player extends GameObject implements Movable {
     }
 
     public boolean isAlive() {
+        if(getLives()==0){
+            alive=false;
+        }
         return alive;
     }
 
