@@ -28,4 +28,6 @@ public abstract class GameObject extends Entity {
         this.game = game;
         this.position = position;
     }
+
+
 }
