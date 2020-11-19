@@ -28,6 +28,10 @@ public class Player extends GameObject implements Movable {
         return lives;
     }
 
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
     public Direction getDirection() {
         return direction;
     }
@@ -41,7 +45,7 @@ public class Player extends GameObject implements Movable {
 
     @Override
     public boolean canMove(Direction direction) {
-        if(!game.getWorld().isInside(direction.nextPosition(getPosition()))|| !game.getWorld().isEmpty(direction.nextPosition(getPosition()))){
+        if(!game.getWorld().isInside(direction.nextPosition(getPosition()))|| !game.getWorld().isDecor(direction.nextPosition(getPosition()))){
             return false;
         }
         return true;
@@ -51,6 +55,9 @@ public class Player extends GameObject implements Movable {
         Position nextPos = direction.nextPosition(getPosition());
         if(game.getWorld().getRaw()[nextPos.y][nextPos.x].equals(WorldEntity.Princess)){
             this.winner=true;
+        }
+        if(game.getWorld().isMonster(nextPos)){
+            setLives(getLives()-1);
         }
         setPosition(nextPos);
     }

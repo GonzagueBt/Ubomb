@@ -48,6 +48,8 @@ public class WorldBuilder {
                 return new BombRangeInc();
             case DoorNextClosed:
                 return new DoorNext();
+            case Monster: //provisoire
+                return new Monster();
             default:
                 return null;
         }

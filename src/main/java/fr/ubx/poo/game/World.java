@@ -65,8 +65,12 @@ public class World {
     }
 
     public boolean isEmpty(Position position) {
+        return grid.get(position) == null;
+    }
+
+    public boolean isDecor(Position position){
         WorldEntity Stone= WorldEntity.Stone;
-        WorldEntity Tree= WorldEntity.Stone;
+        WorldEntity Tree= WorldEntity.Tree;
         WorldEntity Box= WorldEntity.Box;
         if(raw[position.y][position.x].equals(Stone) || raw[position.y][position.x].equals(Tree)){
             return false;
@@ -75,6 +79,14 @@ public class World {
             return false;
         }
 
-        return true;//grid.get(position) == null;
+        return true;
+    }
+
+    public boolean isMonster(Position position){
+        WorldEntity Monster= WorldEntity.Monster;
+        if(raw[position.y][position.x].equals(Monster) ){
+            return true;
+        }
+        return false;
     }
 }
