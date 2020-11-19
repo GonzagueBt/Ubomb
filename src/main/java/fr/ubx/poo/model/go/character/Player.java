@@ -18,6 +18,11 @@ public class Player extends GameObject implements Movable {
     private int lives = 1;
     private boolean winner;
 
+    /// ajout de ces variables : possiblement besoin de changer ces variables de classes
+    private int Bomb=0;
+    private int BombRange= 1;
+    private int key=0;
+
     public Player(Game game, Position position) {
         super(game, position);
         this.direction = Direction.S;
@@ -30,6 +35,30 @@ public class Player extends GameObject implements Movable {
 
     public void setLives(int lives) {
         this.lives = lives;
+    }
+
+    public int getBomb() {
+        return Bomb;
+    }
+
+    public void setBomb(int bomb) {
+        Bomb = bomb;
+    }
+
+    public int getBombRange() {
+        return BombRange;
+    }
+
+    public void setBombRange(int bombRange) {
+        BombRange = bombRange;
+    }
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
     }
 
     public Direction getDirection() {
