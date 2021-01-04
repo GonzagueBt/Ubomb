@@ -21,6 +21,7 @@ public class Game {
     public int initPlayerLives;
     public int numberlevel;
     private int actualLevel=1;
+    private boolean changeWorld = false;
 
     public Game(String worldPath) {
         this.worldPath = worldPath;
@@ -28,12 +29,21 @@ public class Game {
         world = new World(actualLevel);
         Position positionPlayer = null;
         try {
-            positionPlayer = world.findPlayer();
+            if(actualLevel==1) positionPlayer = world.findPlayer();
+            else positionPlayer = world.startPlayer();
             player = new Player(this, positionPlayer);
         } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isChangeWorld() {
+        return changeWorld;
+    }
+
+    public void setChangeWorld(boolean changeWorld) {
+        this.changeWorld = changeWorld;
     }
 
     public int getInitPlayerLives() {
@@ -62,10 +72,10 @@ public class Game {
     }
 
     public void update (long now){
-        Direction direction=player.getDirection();
-        if(player.isOnNextOpenDoor(direction)) actualLevel ++;
-        if(player.isOnPrevOpenDoor(direction)) actualLevel = actualLevel-1;
-        //world.update(actualLevel);
+        int oldLevel = actualLevel;
+        if(player.isNextOpenDoor()) actualLevel ++;
+        if(player.isPrevOpenDoor()) actualLevel = actualLevel-1;
+        world.update(actualLevel, oldLevel);
     }
 
 }

@@ -5,6 +5,7 @@
 package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
@@ -94,6 +95,9 @@ public final class GameEngine {
             Platform.exit();
             System.exit(0);
         }
+        if(input.isKey()){
+            player.processKey();
+        }
         if (input.isMoveDown()) {
             player.requestMove(Direction.S);
         }
@@ -137,8 +141,13 @@ public final class GameEngine {
             game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
             game.getWorld().setChanged(false);
         }
-        //game.update(now);
-
+        Decor decor = game.getWorld().get(player.getPosition());
+        if(game.isChangeWorld() && Decor.isOpenNextDoor(decor)){
+            game.update(now);
+            stage.close();
+            initialize(stage,game);
+            game.setChangeWorld(false);
+        }
         if (!player.isAlive()) {
             gameLoop.stop();
             showMessage("Perdu!", Color.RED);

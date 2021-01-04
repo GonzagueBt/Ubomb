@@ -47,9 +47,11 @@ public class WorldBuilder {
             case BombRangeInc:
                 return new BombRangeInc();
             case DoorNextClosed:
-                return new DoorNext();
+                return new DoorCloseNext();
+            case DoorNextOpened:
+                return new DoorOpenNext();
             case DoorPrevOpened :
-                return new DoorPrev();
+                return new DoorOpen();
             case Monster: //provisoire
                 return new Monster();
             default:
