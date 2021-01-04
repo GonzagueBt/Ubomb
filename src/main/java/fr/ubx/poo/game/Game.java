@@ -19,11 +19,13 @@ public class Game {
     private final Player player;
     private final String worldPath;
     public int initPlayerLives;
+    public int numberlevel;
+    private int actualLevel=1;
 
     public Game(String worldPath) {
-        world = new WorldStatic();
         this.worldPath = worldPath;
         loadConfig(worldPath);
+        world = new World(actualLevel);
         Position positionPlayer = null;
         try {
             positionPlayer = world.findPlayer();
@@ -38,12 +40,14 @@ public class Game {
         return initPlayerLives;
     }
 
+
     private void loadConfig(String path) {
         try (InputStream input = new FileInputStream(new File(path, "config.properties"))) {
             Properties prop = new Properties();
             // load the configuration file
             prop.load(input);
             initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
+            numberlevel = Integer.parseInt(prop.getProperty("levels", "3"));
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
         }
@@ -57,5 +61,11 @@ public class Game {
         return this.player;
     }
 
+    public void update (long now){
+        Direction direction=player.getDirection();
+        if(player.isOnNextOpenDoor(direction)) actualLevel ++;
+        if(player.isOnPrevOpenDoor(direction)) actualLevel = actualLevel-1;
+        //world.update(actualLevel);
+    }
 
 }

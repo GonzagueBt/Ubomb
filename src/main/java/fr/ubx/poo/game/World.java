@@ -5,8 +5,11 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.decor.DoorNext;
 import fr.ubx.poo.model.decor.Stone;
+import fr.ubx.poo.model.decor.Tree;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -14,12 +17,19 @@ import java.util.function.BiConsumer;
 public class World {
     private final Map<Position, Decor> grid;
     private final WorldEntity[][] raw;
+    private ArrayList<Map<Position, Decor>> levels;
     public final Dimension dimension;
+    public final String name = "src/main/resources/sample/level";
+    private boolean changed = true;
 
-    public World(WorldEntity[][] raw) {
-        this.raw = raw;
+    public World(int level) {
+        String num = ""+level;
+        this.raw = Parser.start(name+num+".txt");
+        this.levels = new ArrayList<>();
+        levels.add(null); // pour que l'indice dans la liste soit égale au niveau
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
+        levels.add(grid);
     }
 
     public Position findPlayer() throws PositionNotFoundException {
@@ -45,8 +55,17 @@ public class World {
         grid.put(position, decor);
     }
 
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
+    }
+
     public void clear(Position position) {
         grid.remove(position);
+        this.changed = true;
     }
 
     public void forEach(BiConsumer<Position, Decor> fn) {
@@ -69,24 +88,24 @@ public class World {
     }
 
     public boolean isDecor(Position position){
-        WorldEntity Stone= WorldEntity.Stone;
-        WorldEntity Tree= WorldEntity.Tree;
-        WorldEntity Box= WorldEntity.Box;
-        if(raw[position.y][position.x].equals(Stone) || raw[position.y][position.x].equals(Tree)){
-            return false;
-        }
-        if(raw[position.y][position.x].equals(Box) ){
-            return false;
-        }
-
-        return true;
+        if(isEmpty(position)) return false;
+        Decor decor = grid.get(position);
+        return decor.cantBeOn(decor);
     }
 
     public boolean isMonster(Position position){
         WorldEntity Monster= WorldEntity.Monster;
-        if(raw[position.y][position.x].equals(Monster) ){
-            return true;
-        }
-        return false;
+        return raw[position.y][position.x].equals(Monster);
     }
+
+    /*public void update(int level, int old){
+        if(level< old){
+            this.grid= levels.get(level);
+        }
+        else if(level > old) {
+            String num = ""+level;
+            this.raw = Parser.start(name+num+".txt");
+            levels.add(raw);
+        }
+    }*/
 }

@@ -34,7 +34,6 @@ public class StatusBar {
     public StatusBar(Group root, int sceneWidth, int sceneHeight, Game game) {
         // Status bar
         this.game = game;
-
         level.getStyleClass().add("level");
         level.getChildren().add(new ImageView(ImageFactory.getInstance().getDigit(gameLevel)));
 
@@ -80,6 +79,7 @@ public class StatusBar {
     }
 
     public void update(Game game) {
+        gameLevel = game.numberlevel;
         updateLevel(gameLevel);
         liveValue.setText(String.valueOf(game.getPlayer().getLives()));
         rangeValue.setText(String.valueOf(game.getPlayer().getBombRange()));

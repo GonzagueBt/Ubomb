@@ -25,7 +25,6 @@ public enum WorldEntity {
     BombNumberInc('+'),
     BombNumberDec('-');
 
-
     private char getCode() {
         return code;
     }
@@ -50,4 +49,7 @@ public enum WorldEntity {
     public String toString() {
         return ""+code;
     }
+
+
+
 }

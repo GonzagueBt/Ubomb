@@ -8,6 +8,8 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.model.Movable;
+import fr.ubx.poo.model.decor.Box;
+import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
@@ -74,22 +76,58 @@ public class Player extends GameObject implements Movable {
 
     @Override
     public boolean canMove(Direction direction) {
-        if(!game.getWorld().isInside(direction.nextPosition(getPosition()))|| !game.getWorld().isDecor(direction.nextPosition(getPosition()))){
+        Position nextPos = direction.nextPosition(getPosition());
+        if(!game.getWorld().isInside(direction.nextPosition(getPosition())) || game.getWorld().isDecor(direction.nextPosition(getPosition()))){
             return false;
         }
+
         return true;
     }
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
-        if(game.getWorld().getRaw()[nextPos.y][nextPos.x].equals(WorldEntity.Princess)){
-            this.winner=true;
+        if(!game.getWorld().isEmpty(nextPos)) processMove(nextPos);
+
+        // déplacement des Box
+        // a mettre dans Box() avec méthode abstraite de CanMove de interface Movable
+        if(!game.getWorld().isEmpty(nextPos) && game.getWorld().get(nextPos) instanceof Box){
+            if(game.getWorld().isInside(direction.nextPosition(getPosition(),2))  && game.getWorld().isEmpty(direction.nextPosition(getPosition(),2))){
+                Position nextPos2 = direction.nextPosition(getPosition(),2);
+                game.getWorld().set(nextPos2, game.getWorld().get(nextPos));
+                game.getWorld().clear(nextPos);
+            }
         }
+
+
+
+        //Perd une vie
         if(game.getWorld().isMonster(nextPos)){
             setLives(getLives()-1);
         }
         setPosition(nextPos);
     }
+
+    private void processMove(Position position){
+        Decor decor = game.getWorld().get(position);
+        // WINNER
+        if(decor.isPrincess(decor)){
+            this.winner=true;
+        }
+
+        //Win a Heart
+        if(decor.isHeart(decor)){
+            game.getWorld().clear(position);
+            this.lives++;
+        }
+
+        //Win a key
+        if(decor.isKey(decor)){
+            game.getWorld().clear(position);
+            this.key++;
+        }
+    }
+
+
 
     public void update(long now) {
         if (moveRequested) {
@@ -110,5 +148,21 @@ public class Player extends GameObject implements Movable {
         }
         return alive;
     }
+
+    public boolean isOnNextOpenDoor(Direction direction){
+        Position nextPos = direction.nextPosition(getPosition());
+        if(game.getWorld().getRaw()[nextPos.y][nextPos.x].equals(WorldEntity.DoorNextOpened)){
+            return true;
+        }
+        return false;
+    }
+    public boolean isOnPrevOpenDoor(Direction direction){
+        Position nextPos = direction.nextPosition(getPosition());
+        if(game.getWorld().getRaw()[nextPos.y][nextPos.x].equals(WorldEntity.DoorPrevOpened)){
+            return true;
+        }
+        return false;
+    }
+
 
 }

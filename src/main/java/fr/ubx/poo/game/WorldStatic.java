@@ -1,4 +1,4 @@
-package fr.ubx.poo.game;
+/*package fr.ubx.poo.game;
 
 import static fr.ubx.poo.game.WorldEntity.*;
 
@@ -22,4 +22,4 @@ public class WorldStatic extends World {
     public WorldStatic() {
         super(mapEntities);
     }
-}
+}*/
