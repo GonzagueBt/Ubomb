@@ -24,16 +24,26 @@ public class Decor extends Entity {
     public boolean isKey (Decor decor){
         return decor instanceof Key;
     }
-    public boolean isMonster (Decor decor){
-        return decor instanceof Monster;
-    }
+    public boolean isBox (Decor decor) { return decor instanceof Box; }
     public boolean isOpenDoor (Decor decor){
         return decor instanceof DoorOpen;
     }
     public boolean isCloseDoor (Decor decor){
         return decor instanceof DoorCloseNext;
     }
-    static public boolean isOpenNextDoor (Decor decor){
+    public boolean isBNDec (Decor decor){
+        return decor instanceof BombNumberDec;
+    }
+    public boolean isBNInc (Decor decor){
+        return decor instanceof BombNumberInc;
+    }
+    public boolean isBRDec (Decor decor){
+        return decor instanceof BombRangeDec;
+    }
+    public boolean isBRInc (Decor decor){
+        return decor instanceof BombRangeInc;
+    }
+     public boolean isOpenNextDoor (Decor decor){
         return decor instanceof DoorCloseNext;
     }
 

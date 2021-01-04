@@ -6,7 +6,6 @@ package fr.ubx.poo.model.go.character;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
-import fr.ubx.poo.game.WorldEntity;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
@@ -22,7 +21,7 @@ public class Player extends GameObject implements Movable {
     private boolean winner;
 
     /// ajout de ces variables : possiblement besoin de changer ces variables de classes
-    private int Bomb=0;
+    private int Bomb=1;
     private int BombRange= 1;
     private int key=0;
 
@@ -82,7 +81,7 @@ public class Player extends GameObject implements Movable {
         }
         Position nextPos = direction.nextPosition(getPosition());
         if(!game.getWorld().isEmpty(nextPos) && game.getWorld().get(nextPos) instanceof Box) {
-            if (!game.getWorld().isEmpty(direction.nextPosition(getPosition(), 2))) {
+            if (!game.getWorld().isInside(direction.nextPosition(getPosition(), 2)) || !game.getWorld().isEmpty(direction.nextPosition(getPosition(), 2))) {
                 return false;
             }
         }
@@ -92,7 +91,6 @@ public class Player extends GameObject implements Movable {
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         if(!game.getWorld().isEmpty(nextPos)) processMove(nextPos);
-
         // déplacement des Box
         // a mettre dans Box() avec méthode abstraite de CanMove de interface Movable
         if(!game.getWorld().isEmpty(nextPos) && game.getWorld().get(nextPos) instanceof Box){
@@ -100,10 +98,8 @@ public class Player extends GameObject implements Movable {
             game.getWorld().set(nextPos2, game.getWorld().get(nextPos));
             game.getWorld().clear(nextPos);
         }
-
-        //Perd une vie
-        if(game.getWorld().isMonster(nextPos)){
-            setLives(getLives()-1);
+        for(int i=0 ; i<game.getMonsters().size() ; i++){
+            game.getMonsters().get(i).touchPlayer();
         }
         setPosition(nextPos);
     }
@@ -118,6 +114,22 @@ public class Player extends GameObject implements Movable {
         if(decor.isHeart(decor)){
             game.getWorld().clear(position);
             this.lives++;
+        }
+        if(decor.isBNDec(decor)){
+            game.getWorld().clear(position);
+            if(Bomb>1) this.Bomb--;
+        }
+        if(decor.isBNInc(decor)){
+            game.getWorld().clear(position);
+            this.Bomb++;
+        }
+        if(decor.isBRDec(decor)){
+            game.getWorld().clear(position);
+            if(BombRange>1) this.BombRange--;
+        }
+        if(decor.isBRInc(decor)){
+            game.getWorld().clear(position);
+            this.BombRange++;
         }
         //Win a key
         if(decor.isKey(decor)){

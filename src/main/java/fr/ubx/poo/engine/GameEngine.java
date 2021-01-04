@@ -6,6 +6,7 @@ package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
@@ -32,17 +33,20 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
+    private ArrayList<Monster> monsters;
     private final List<Sprite> sprites = new ArrayList<>();
     private StatusBar statusBar;
     private Pane layer;
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
+    private ArrayList<Sprite> spriteMonsters = new ArrayList<>();
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
         this.game = game;
         this.player = game.getPlayer();
+        this.monsters= game.getMonsters();
         initialize(stage, game);
         buildAndSetGameLoop();
     }
@@ -70,7 +74,9 @@ public final class GameEngine {
         // Create decor sprites
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
-
+        for(int i=0 ; i< monsters.size() ; i++){
+            spriteMonsters.add(SpriteFactory.createMonster(layer, monsters.get(i)));
+        }
     }
 
     protected final void buildAndSetGameLoop() {
@@ -135,6 +141,9 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
+        for(int i=0 ; i< monsters.size() ; i++){
+            monsters.get(i).update(now);
+        }
         if(game.getWorld().isChanged()){
             sprites.forEach(Sprite::remove);
             sprites.clear();
@@ -142,7 +151,7 @@ public final class GameEngine {
             game.getWorld().setChanged(false);
         }
         Decor decor = game.getWorld().get(player.getPosition());
-        if(game.isChangeWorld() && Decor.isOpenNextDoor(decor)){
+        if(game.isChangeWorld() && !game.getWorld().isEmpty(player.getPosition()) && decor.isOpenNextDoor(decor)){
             game.update(now);
             stage.close();
             initialize(stage,game);
@@ -161,6 +170,9 @@ public final class GameEngine {
     private void render() {
         sprites.forEach(Sprite::render);
         // last rendering to have player in the foreground
+        for(int i=0 ; i< monsters.size() ; i++){
+            spriteMonsters.get(i).render();
+        }
         spritePlayer.render();
     }
 

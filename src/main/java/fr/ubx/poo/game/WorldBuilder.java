@@ -52,8 +52,6 @@ public class WorldBuilder {
                 return new DoorOpenNext();
             case DoorPrevOpened :
                 return new DoorOpen();
-            case Monster: //provisoire
-                return new Monster();
             default:
                 return null;
         }

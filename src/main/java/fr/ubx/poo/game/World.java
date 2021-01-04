@@ -5,6 +5,7 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.go.character.Monster;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,8 +15,6 @@ import java.util.function.BiConsumer;
 public class World {
     private Map<Position, Decor> grid;
     private WorldEntity[][] raw;
-    private ArrayList<Map<Position, Decor>> gridLevels;
-    private ArrayList<WorldEntity[][]> rawLevels;
     public Dimension dimension;
     public final String name = "src/main/resources/sample/level";
     private boolean changed = true;
@@ -23,14 +22,8 @@ public class World {
     public World(int level) {
         String num = ""+level;
         this.raw = Parser.start(name+num+".txt");
-        this.gridLevels = new ArrayList<>();
-        this.rawLevels = new ArrayList<>();
-        gridLevels.add(null); // pour que l'indice dans la liste soit égale au niveau
-        rawLevels.add(null);
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
-        gridLevels.add(grid);
-        rawLevels.add(raw);
     }
 
     public Position findPlayer() throws PositionNotFoundException {
@@ -105,13 +98,8 @@ public class World {
         return decor.cantBeOn(decor);
     }
 
-    public boolean isMonster(Position position){
-        if(isEmpty(position)) return false;
-        Decor decor = grid.get(position);
-        return decor.isMonster(decor);
-    }
 
-    public void update(int level, int old){
+    /*public void update(int level, int old){
         gridLevels.set(old, this.grid);
         rawLevels.set(old, this.raw);
         if(level< old){
@@ -127,5 +115,5 @@ public class World {
             gridLevels.add(grid);
             rawLevels.add(raw);
         }
-    }
+    }*/
 }

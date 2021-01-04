@@ -9,14 +9,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Properties;
 
+import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Player;
 
 public class Game {
 
     private final World world;
     private final Player player;
+    private ArrayList<Monster> monsters = new ArrayList<>();
     private final String worldPath;
     public int initPlayerLives;
     public int numberlevel;
@@ -32,9 +35,20 @@ public class Game {
             if(actualLevel==1) positionPlayer = world.findPlayer();
             else positionPlayer = world.startPlayer();
             player = new Player(this, positionPlayer);
+            findMonsters();
         } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
+        }
+    }
+
+    public void findMonsters(){
+        for (int x = 0; x < getWorld().dimension.width; x++) {
+            for (int y = 0; y < getWorld().dimension.height; y++) {
+                if (getWorld().getRaw()[y][x].equals(WorldEntity.Monster)){
+                    monsters.add(new Monster(this, new Position(x, y)));
+                }
+            }
         }
     }
 
@@ -50,6 +64,9 @@ public class Game {
         return initPlayerLives;
     }
 
+    public ArrayList<Monster> getMonsters() {
+        return monsters;
+    }
 
     private void loadConfig(String path) {
         try (InputStream input = new FileInputStream(new File(path, "config.properties"))) {
@@ -75,7 +92,8 @@ public class Game {
         int oldLevel = actualLevel;
         if(player.isNextOpenDoor()) actualLevel ++;
         if(player.isPrevOpenDoor()) actualLevel = actualLevel-1;
-        world.update(actualLevel, oldLevel);
+        //world.update(actualLevel, oldLevel);
+        //findMonsters();
     }
 
 }
