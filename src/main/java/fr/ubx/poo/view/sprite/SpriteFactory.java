@@ -8,6 +8,7 @@ import static fr.ubx.poo.view.image.ImageResource.*;
 
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.*;
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Player;
 import fr.ubx.poo.view.image.ImageFactory;
@@ -40,7 +41,7 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(BOMBRANGEINC), position);
         if (decor instanceof DoorCloseNext)
             return new SpriteDecor(layer, factory.get(DOOR_CLOSED), position);
-        if (decor instanceof DoorOpen)
+        if (decor instanceof DoorOpenPrev)
             return new SpriteDecor(layer, factory.get(DOOR_OPEN), position);
         if (decor instanceof DoorOpenNext)
             return new SpriteDecor(layer, factory.get(DOOR_OPEN), position);
@@ -51,4 +52,5 @@ public final class SpriteFactory {
         return new SpritePlayer(layer, player);
     }
     public static Sprite createMonster(Pane layer, Monster monster) { return new SpriteMonster(layer, monster);}
+    public static Sprite createBomb(Pane layer, Bomb bomb) {return new SpriteBomb(layer, bomb);}
 }

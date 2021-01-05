@@ -43,12 +43,12 @@ public class Monster extends GameObject implements Movable {
     }
 
     public void update(long now) {
-        if(System.currentTimeMillis()-time>2000) {
+        if(System.currentTimeMillis()-time>1000) {
             direction = Direction.random();
             if (canMove(direction)) {
                 doMove(direction);
                 time = System.currentTimeMillis();
-            }
+            }else this.update(now);
         }
     }
 
@@ -56,5 +56,13 @@ public class Monster extends GameObject implements Movable {
         if(getPosition().equals(game.getPlayer().getPosition())){
             game.getPlayer().setLives(game.getPlayer().getLives()-1);
         }
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 }

@@ -2,9 +2,7 @@ package fr.ubx.poo.view.sprite;
 
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.model.go.character.Monster;
-import fr.ubx.poo.model.go.character.Player;
 import fr.ubx.poo.view.image.ImageFactory;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class SpriteMonster extends SpriteGameObject{

@@ -19,6 +19,7 @@ public class Player extends GameObject implements Movable {
     private boolean moveRequested = false;
     private int lives = 1;
     private boolean winner;
+    private long invulnerable = 0;
 
     /// ajout de ces variables : possiblement besoin de changer ces variables de classes
     private int Bomb=1;
@@ -36,6 +37,10 @@ public class Player extends GameObject implements Movable {
     }
 
     public void setLives(int lives) {
+        if(lives<this.lives){ // for invulnerability during one second
+            if(invulnerable!=0) return;
+            invulnerable=System.currentTimeMillis();
+        }
         this.lives = lives;
     }
 
@@ -98,9 +103,6 @@ public class Player extends GameObject implements Movable {
             game.getWorld().set(nextPos2, game.getWorld().get(nextPos));
             game.getWorld().clear(nextPos);
         }
-        for(int i=0 ; i<game.getMonsters().size() ; i++){
-            game.getMonsters().get(i).touchPlayer();
-        }
         setPosition(nextPos);
     }
 
@@ -151,10 +153,18 @@ public class Player extends GameObject implements Movable {
         }
     }
 
+    public void processBomb(){
+
+    }
+
     public void update(long now) {
+        if(System.currentTimeMillis()-invulnerable>1000) invulnerable=0;
         if (moveRequested) {
             if (canMove(direction)) {
                 doMove(direction);
+                for(int i=0 ; i<game.getMonsters().size() ; i++){
+                    game.getMonsters().get(i).touchPlayer();
+                }
             }
         }
         moveRequested = false;

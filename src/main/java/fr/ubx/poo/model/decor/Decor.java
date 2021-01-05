@@ -13,7 +13,17 @@ public class Decor extends Entity {
 
     public boolean cantBeOn (Decor decor){
         if(decor instanceof Stone || decor instanceof Tree || (decor instanceof DoorCloseNext)) return true;
-            return false;
+        return false;
+    }
+
+    public boolean bombCanDestroy (){
+        if(isOpenNextDoor(this) || cantBeOn(this) || isOpenDoor(this) || isPrincess(this) || isKey(this)) return false;
+        return true;
+    }
+
+    public boolean stopExplosion(){
+        if(!cantBeOn(this) || isBox(this) || isOpenDoor(this) || isOpenNextDoor(this)) return true;
+        return false;
     }
     public boolean isHeart (Decor decor){
         return decor instanceof Heart;
@@ -26,7 +36,7 @@ public class Decor extends Entity {
     }
     public boolean isBox (Decor decor) { return decor instanceof Box; }
     public boolean isOpenDoor (Decor decor){
-        return decor instanceof DoorOpen;
+        return decor instanceof DoorOpenPrev;
     }
     public boolean isCloseDoor (Decor decor){
         return decor instanceof DoorCloseNext;
@@ -43,7 +53,7 @@ public class Decor extends Entity {
     public boolean isBRInc (Decor decor){
         return decor instanceof BombRangeInc;
     }
-     public boolean isOpenNextDoor (Decor decor){
+    public boolean isOpenNextDoor (Decor decor){
         return decor instanceof DoorCloseNext;
     }
 

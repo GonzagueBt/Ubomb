@@ -12,14 +12,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Player;
 
 public class Game {
-
     private final World world;
     private final Player player;
     private ArrayList<Monster> monsters = new ArrayList<>();
+    private ArrayList<Bomb> bombs = new ArrayList<>();
     private final String worldPath;
     public int initPlayerLives;
     public int numberlevel;
@@ -52,6 +53,12 @@ public class Game {
         }
     }
 
+    public void createBomb(){
+        Bomb bomb = new Bomb(this, player.getPosition());
+        player.setBomb(player.getBomb()-1);
+        bombs.add(bomb);
+    }
+
     public boolean isChangeWorld() {
         return changeWorld;
     }
@@ -66,6 +73,10 @@ public class Game {
 
     public ArrayList<Monster> getMonsters() {
         return monsters;
+    }
+
+    public ArrayList<Bomb> getBombs() {
+        return bombs;
     }
 
     private void loadConfig(String path) {
