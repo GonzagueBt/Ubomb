@@ -63,50 +63,24 @@ public class Parser{
     }
 
     private static WorldEntity processParse (char code){
-        switch (code) {
-            case 'P' :
-                return WorldEntity.Player;
-            case '_' :
-                return WorldEntity.Empty;
-            case 'S' :
-                return WorldEntity.Stone;
-            case 'T':
-                return WorldEntity.Tree;
-            case 'B':
-                return WorldEntity.Box;
-            case 'K':
-                return WorldEntity.Key;
-            case 'W':
-                return WorldEntity.Princess;
-            case 'H':
-                return WorldEntity.Heart;
-            case '-':
-                return WorldEntity.BombNumberDec;
-            case '+':
-                return WorldEntity.BombNumberInc;
-            case '<' :
-                return WorldEntity.BombRangeDec;
-            case '>' :
-                return WorldEntity.BombRangeInc;
-            case 'n':
-                return WorldEntity.DoorNextClosed;
-            case 'V' :
-                return WorldEntity.DoorPrevOpened;
-            case 'M': //provisoire
-                return WorldEntity.Monster;
-            default:
-                return null;
-        }
+        return switch (code) {
+            case 'P' -> WorldEntity.Player;
+            case '_' -> WorldEntity.Empty;
+            case 'S' -> WorldEntity.Stone;
+            case 'T' -> WorldEntity.Tree;
+            case 'B' -> WorldEntity.Box;
+            case 'K' -> WorldEntity.Key;
+            case 'W' -> WorldEntity.Princess;
+            case 'H' -> WorldEntity.Heart;
+            case '-' -> WorldEntity.BombNumberDec;
+            case '+' -> WorldEntity.BombNumberInc;
+            case '<' -> WorldEntity.BombRangeDec;
+            case '>' -> WorldEntity.BombRangeInc;
+            case 'n' -> WorldEntity.DoorNextClosed;
+            case 'V' -> WorldEntity.DoorPrevOpened;
+            case 'M' -> WorldEntity.Monster;
+            default -> null;
+        };
     }
 
-    public static void main(String[] args){
-        String level = "src/main/resources/sample/level1.txt";
-        WorldEntity[][] table = start(level);
-        for(int i=0 ; i<12; i++){
-            for(int j=0 ; j<12 ; j++){
-                System.out.print(table[i][j]);
-            }
-            System.out.println();
-        }
-    }
 }

@@ -4,7 +4,6 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Game;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.Movable;
-import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.GameObject;
 
@@ -26,10 +25,7 @@ public class Monster extends GameObject implements Movable {
         }
         Position nextPos = direction.nextPosition(getPosition());
         Decor decor = game.getWorld().get(nextPos);
-        if(!game.getWorld().isEmpty(nextPos) && (decor.isBox(decor) || decor.isOpenDoor(decor) || decor.isOpenNextDoor(decor))) {
-            return false;
-        }
-        return true;
+        return game.getWorld().isEmpty(nextPos) || (!decor.isBox(decor) && !decor.isOpenDoor(decor) && !decor.isOpenNextDoor(decor));
     }
 
     public Direction getDirection() {

@@ -17,7 +17,7 @@ public class Player extends GameObject implements Movable {
     private boolean alive = true;
     Direction direction;
     private boolean moveRequested = false;
-    private int lives = 1;
+    private int lives;
     private boolean winner;
     private long invulnerable = 0;
 
@@ -56,10 +56,6 @@ public class Player extends GameObject implements Movable {
         return BombRange;
     }
 
-    public void setBombRange(int bombRange) {
-        BombRange = bombRange;
-    }
-
     public int getKey() {
         return key;
     }
@@ -86,9 +82,7 @@ public class Player extends GameObject implements Movable {
         }
         Position nextPos = direction.nextPosition(getPosition());
         if(!game.getWorld().isEmpty(nextPos) && game.getWorld().get(nextPos) instanceof Box) {
-            if (!game.getWorld().isInside(direction.nextPosition(getPosition(), 2)) || !game.getWorld().isEmpty(direction.nextPosition(getPosition(), 2))) {
-                return false;
-            }
+            return game.getWorld().isInside(direction.nextPosition(getPosition(), 2)) && game.getWorld().isEmpty(direction.nextPosition(getPosition(), 2));
         }
         return true;
     }
@@ -153,9 +147,7 @@ public class Player extends GameObject implements Movable {
         }
     }
 
-    public void processBomb(){
 
-    }
 
     public void update(long now) {
         if(System.currentTimeMillis()-invulnerable>1000) invulnerable=0;
@@ -184,19 +176,13 @@ public class Player extends GameObject implements Movable {
     public boolean isNextOpenDoor(){
         Position nextPos = direction.nextPosition(getPosition());
         Decor decor = game.getWorld().get(nextPos);
-        if(!game.getWorld().isEmpty(nextPos) && decor.isOpenNextDoor(decor)){
-            return true;
-        }
-        return false;
+        return !game.getWorld().isEmpty(nextPos) && decor.isOpenNextDoor(decor);
     }
 
     public boolean isPrevOpenDoor(){
         Position nextPos = direction.nextPosition(getPosition());
         Decor decor = game.getWorld().get(nextPos);
-        if(!game.getWorld().isEmpty(nextPos) && decor.isOpenDoor(decor)){
-            return true;
-        }
-        return false;
+        return !game.getWorld().isEmpty(nextPos) && decor.isOpenDoor(decor);
     }
 
 

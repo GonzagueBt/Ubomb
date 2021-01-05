@@ -38,8 +38,8 @@ public final class GameEngine {
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
-    private ArrayList<Sprite> spriteMonsters = new ArrayList<>();
-    private ArrayList<Sprite> spriteBombs = new ArrayList<>();
+    private final ArrayList<Sprite> spriteMonsters = new ArrayList<>();
+    private final ArrayList<Sprite> spriteBombs = new ArrayList<>();
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;

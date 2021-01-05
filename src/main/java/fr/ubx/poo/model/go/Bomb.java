@@ -9,8 +9,7 @@ import java.util.ArrayList;
 public class Bomb extends GameObject{
     private long time;
     private int number=0;
-    private boolean destroy=false;
-    private int range;
+    private final int range;
 
     public Bomb(Game game, Position position) {
         super(game, position);

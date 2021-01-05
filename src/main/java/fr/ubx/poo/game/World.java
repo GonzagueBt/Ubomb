@@ -5,16 +5,13 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
-import fr.ubx.poo.model.go.character.Monster;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class World {
-    private Map<Position, Decor> grid;
-    private WorldEntity[][] raw;
+    private final Map<Position, Decor> grid;
+    private final WorldEntity[][] raw;
     public Dimension dimension;
     public final String name = "src/main/resources/sample/level";
     private boolean changed = true;
@@ -82,10 +79,7 @@ public class World {
     }
 
     public boolean isInside(Position position) {
-        if(position.x<0 || position.x >= dimension.width || position.y<0 || position.y>= dimension.height){
-            return false;
-        }
-        return true; // to update
+        return position.x >= 0 && position.x < dimension.width && position.y >= 0 && position.y < dimension.height;// to update
     }
 
     public boolean isEmpty(Position position) {
