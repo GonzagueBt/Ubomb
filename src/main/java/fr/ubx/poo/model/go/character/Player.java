@@ -82,7 +82,13 @@ public class Player extends GameObject implements Movable {
         }
         Position nextPos = direction.nextPosition(getPosition());
         if(!game.getWorld().isEmpty(nextPos) && game.getWorld().get(nextPos) instanceof Box) {
-            return game.getWorld().isInside(direction.nextPosition(getPosition(), 2)) && game.getWorld().isEmpty(direction.nextPosition(getPosition(), 2));
+            for(int i=0 ; i<game.getMonsters().size() ; i++){
+                if(game.getMonsters().get(i).getPosition().equals(direction.nextPosition(getPosition(), 2))){
+                    return false;
+                }
+            }
+            return game.getWorld().isInside(direction.nextPosition(getPosition(), 2)) &&
+                    game.getWorld().isEmpty(direction.nextPosition(getPosition(), 2) );
         }
         return true;
     }

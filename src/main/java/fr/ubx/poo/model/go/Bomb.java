@@ -48,8 +48,10 @@ public class Bomb extends GameObject{
             // Est
             Decor decor = game.getWorld().get(pos_x1);
             if(memory.get(0)==0){
-                if(!game.getWorld().isEmpty(pos_x1) && game.getWorld().isInside(pos_x1) && decor.bombCanDestroy()) {
-                    game.getWorld().clear(pos_x1);
+                if(!game.getWorld().isEmpty(pos_x1) && game.getWorld().isInside(pos_x1)){
+                    if(decor.bombCanDestroy()) {
+                        game.getWorld().clear(pos_x1);
+                    }
                     if (decor.stopExplosion()) memory.set(0, 1);
                 }
                 for(int j=0 ; j< game.getMonsters().size() ; j++){
@@ -60,8 +62,10 @@ public class Bomb extends GameObject{
             // Ouest
             decor = game.getWorld().get(pos_x0);
             if(memory.get(1)==0){
-                if(!game.getWorld().isEmpty(pos_x0) && game.getWorld().isInside(pos_x0) && decor.bombCanDestroy()) {
-                    game.getWorld().clear(pos_x0);
+                if(!game.getWorld().isEmpty(pos_x0) && game.getWorld().isInside(pos_x0)){
+                    if(decor.bombCanDestroy()) {
+                        game.getWorld().clear(pos_x0);
+                    }
                     if (decor.stopExplosion()) memory.set(1, 1);
                 }
                 for(int j=0 ; j< game.getMonsters().size() ; j++){
@@ -72,8 +76,10 @@ public class Bomb extends GameObject{
             // Sud
             decor = game.getWorld().get(pos_y1);
             if(memory.get(2)==0){
-                if(!game.getWorld().isEmpty(pos_y1) && game.getWorld().isInside(pos_y1) && decor.bombCanDestroy()) {
-                    game.getWorld().clear(pos_y1);
+                if(!game.getWorld().isEmpty(pos_y1) && game.getWorld().isInside(pos_y1)){
+                    if(decor.bombCanDestroy()) {
+                        game.getWorld().clear(pos_y1);
+                    }
                     if (decor.stopExplosion()) memory.set(2, 1);
                 }
                 for(int j=0 ; j< game.getMonsters().size() ; j++){
@@ -84,8 +90,10 @@ public class Bomb extends GameObject{
             // Nord
             decor = game.getWorld().get(pos_y0);
             if(memory.get(3)==0){
-                if(!game.getWorld().isEmpty(pos_y0) && game.getWorld().isInside(pos_y0) && decor.bombCanDestroy()) {
-                    game.getWorld().clear(pos_y0);
+                if(!game.getWorld().isEmpty(pos_y0) && game.getWorld().isInside(pos_y0)){
+                    if(decor.bombCanDestroy()) {
+                        game.getWorld().clear(pos_y0);
+                    }
                     if (decor.stopExplosion()) memory.set(3, 1);
                 }
                 for(int j=0 ; j< game.getMonsters().size() ; j++){

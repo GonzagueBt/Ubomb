@@ -22,7 +22,7 @@ public class Decor extends Entity {
     }
 
     public boolean stopExplosion(){
-        if(!cantBeOn(this) || isBox(this) || isOpenDoor(this) || isOpenNextDoor(this)) return true;
+        if(cantBeOn(this) || isBox(this) || isOpenDoor(this) || isOpenNextDoor(this)) return true;
         return false;
     }
     public boolean isHeart (Decor decor){

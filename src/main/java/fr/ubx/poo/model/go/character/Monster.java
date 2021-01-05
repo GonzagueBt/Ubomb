@@ -39,13 +39,17 @@ public class Monster extends GameObject implements Movable {
     }
 
     public void update(long now) {
-        if(System.currentTimeMillis()-time>1000) {
+        if(System.currentTimeMillis()-time>2000) {
             direction = Direction.random();
             if (canMove(direction)) {
                 doMove(direction);
                 time = System.currentTimeMillis();
-            }else this.update(now);
+            }else if(!isBlocked()) this.update(now);
         }
+    }
+
+    public boolean isBlocked(){
+        return !canMove(Direction.S) && !canMove(Direction.N) && !canMove(Direction.E) && !canMove(Direction.W);
     }
 
     public void touchPlayer(){
