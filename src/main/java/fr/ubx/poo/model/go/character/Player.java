@@ -84,40 +84,46 @@ public class Player extends GameObject implements Movable {
         setPosition(nextPos);
     }
 
-    // all things that can happen when player moves
+    /**
+     * Treat all things that can happen when the player makes a move :
+     * winner ; lives ; win or loose a bomb ; increase or decrease the range of bombs ; win a key ; move a box
+     * lose a life because of a monster
+     * @see Decor many methods used to compare 2 decors
+     * @param position the position where the player makes his moves
+     */
     private void processMove(Position position){
         Decor decor = game.getWorld().get(game.getActualLevel()).get(position);
         // WINNER
-        if(decor.isPrincess(decor)){
+        if(decor.isPrincess()){
             this.winner=true;
         }
         //Win a Heart
-        if(decor.isHeart(decor)){
+        if(decor.isHeart()){
             game.getWorld().get(game.getActualLevel()).clear(position);
             this.lives++;
         }
         // decrease number of bomb
-        if(decor.isBNDec(decor)){
+        if(decor.isBNDec()){
             game.getWorld().get(game.getActualLevel()).clear(position);
             if(Bomb>1) this.Bomb--;
         }
         //increase number of bomb
-        if(decor.isBNInc(decor)){
+        if(decor.isBNInc()){
             game.getWorld().get(game.getActualLevel()).clear(position);
             this.Bomb++;
         }
         // decrease range of bomb
-        if(decor.isBRDec(decor)){
+        if(decor.isBRDec()){
             game.getWorld().get(game.getActualLevel()).clear(position);
             if(BombRange>1) this.BombRange--;
         }
         //increase range of bomb
-        if(decor.isBRInc(decor)){
+        if(decor.isBRInc()){
             game.getWorld().get(game.getActualLevel()).clear(position);
             this.BombRange++;
         }
         //Win a key
-        if(decor.isKey(decor)){
+        if(decor.isKey()){
             game.getWorld().get(game.getActualLevel()).clear(position);
             this.key++;
         }
@@ -137,12 +143,14 @@ public class Player extends GameObject implements Movable {
         game.getWorld().get(game.getActualLevel()).setChanged(true);
     }
 
-    //when the player input enter
+    /**
+     * processKey treat the input Enter, look if the player can open a close door with a key
+     */
     public void processKey(){
         Position position = direction.nextPosition(getPosition());
         Decor decor = game.getWorld().get(game.getActualLevel()).get(position);
         // only if player has a key and look a close door
-        if(!game.getWorld().get(game.getActualLevel()).isEmpty(position) && decor.isCloseDoor(decor)){
+        if(!game.getWorld().get(game.getActualLevel()).isEmpty(position) && decor.isCloseDoor()){
             if(key>0){
                 game.getWorld().get(game.getActualLevel()).set(position, new DoorNextOpened());
                 key--;

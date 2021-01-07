@@ -23,7 +23,7 @@ public class Game {
     private int initPlayerLives;
     private int numberlevel; // allow to create all levels at the beginning
     private int actualLevel=1; // indicates the level who is the player
-    private boolean changeLevel = false;
+    private boolean changeLevel = false; //if the player has change of level with his last move
     private int maxlevel = 1 ; // to indicates the bigger levels that the player has already visited
 
     public Game(String worldPath){
@@ -57,13 +57,26 @@ public class Game {
     // getters and setters //
 
     // create a new level //
-    public void newLevel(int index){
-        World world = new World(index) ;
+
+    /**
+     * newLevel create a new world
+     * @param level is the number of the new level
+     */
+    public void newLevel(int level){
+        World world = new World(level) ;
         this.world.add(world);
-        findMonsters(index);
+        findMonsters(level);
     }
 
     // find and create monsters of a level //
+
+    /**
+     * findMonsters find and create monsters in the actual level ; the monsters is add to the Arraylist monsters in
+     * the class world of the actual level.
+     * @param level is the number of a level and the index of the level of a class World in the Arraylist world in this
+     *              class ;
+     * @see World
+     */
     public void findMonsters(int level){
         for (int x = 0; x < getWorld().get(level).dimension.width; x++) {
             for (int y = 0; y < getWorld().get(level).dimension.height; y++) {
@@ -75,6 +88,12 @@ public class Game {
     }
 
     // create a bomb on the case of the player only if any bomb is already is the case //
+
+    /**
+     * createBomb create a new bomb, it's calls when [space] is in input
+     * It's check if a bomb can be put on the case of the player, and put it
+     * It's add a bomb to the Arraylist Bombs in the class World of the actual level
+     */
     public void createBomb(){
         boolean canBomb = true;
         for(int i=0; i<getWorld().get(actualLevel).getBombs().size() ; i++){
@@ -83,7 +102,7 @@ public class Game {
                 break;
             }
         }
-        if(canBomb) {
+        if(canBomb) { // if the player can put a bomb on his case
             Bomb bomb = new Bomb(this, player.getPosition(), actualLevel);
             player.setBomb(player.getBomb() - 1);
             getWorld().get(actualLevel).getBombs().add(bomb);
@@ -103,6 +122,13 @@ public class Game {
     }
 
     // update the world : change the level if  the player is on an open door //
+
+    /**
+     * update the world (so the level). Change the world if the player is on a OpenDoor with the corresponding world
+     * @changeLevel allow to indicates that it's needs to close stage and initialize again the game (with all the
+     * sprites) in the class GameEngine
+     * @see fr.ubx.poo.engine.GameEngine
+     */
     public void update (){
         if(getWorld().get(actualLevel).isPrevOpenDoor(player.getPosition())){
             actualLevel--;
@@ -118,6 +144,14 @@ public class Game {
     }
 
     // update all bombs
+
+    /**
+     * updateBombs updates all bombs of all levels (so of each world in the arraylist world)
+     * It's begin with the update of the bomb in the class Bomb, and if it's time for the bomb to explose,
+     * the method make all the processus (call the function explosion of the class Bomb, remove the bomb and add a
+     * bomb in the bag of the player)
+     * @see Bomb
+     */
     public void updateBombs(long now){
         for(int level=1 ; level<=maxlevel ; level++) {
             int number= getWorld().get(level).getBombs().size();
@@ -135,6 +169,13 @@ public class Game {
     }
 
     // update all monsters of all word
+
+    /**
+     * updateMonsters updates all monsters of all levels (so of each world in the arraylist world)
+     * If the monster he's not destroy by a bomb, we call the methods update of the class Monster who allow
+     * to update his move.
+     * @see Monster
+     */
     public void updateMonsters(long now){
         for(int level=1 ; level<=maxlevel ; level++) {
             int number = getWorld().get(level).getMonsters().size();

@@ -18,9 +18,9 @@ public class World {
     private final WorldEntity[][] raw;
     public Dimension dimension;
     public final String name = "src/main/resources/sample/level";
-    private boolean changed = true;
-    private final ArrayList<Monster> monsters = new ArrayList<>();
-    private final ArrayList<Bomb> bombs = new ArrayList<>();
+    private boolean changed = true; // to indicates if a decor have been change and if its necessary to modified the sprites
+    private final ArrayList<Monster> monsters = new ArrayList<>(); // list of all monsters in this world at this moment
+    private final ArrayList<Bomb> bombs = new ArrayList<>(); // list of all bombs in this world at this moment
 
     public World(int level) {
         String num = ""+level;
@@ -68,6 +68,12 @@ public class World {
         throw new PositionNotFoundException("Player");
     }
 
+    /**
+     * startPlayer allow to find the position of the player when he arrives in a new level, so the method search
+     * the position of an open door (previous or following)
+     * @param i is equal to 0 if the new level succeeds the actual one or 1 if the new level preceeds the actual one
+     * @return a position in the new actual level
+     */
     public Position startPlayer(int i){
         WorldEntity door;
         if(i==0) door =WorldEntity.DoorPrevOpened;
@@ -82,29 +88,55 @@ public class World {
         return null;
     }
 
+    /**
+     * isInside check if a position is on the world or outside the limits of the world
+     * @param position is the position that we want to check
+     * @return a boolean
+     */
     public boolean isInside(Position position) {
         return position.x >= 0 && position.x < dimension.width && position.y >= 0 && position.y < dimension.height;
     }
 
+    /**
+     * isempty check if a position doesn't contain any decor
+     * @param position is the position that we want to check
+     * @return a boolean
+     */
     public boolean isEmpty(Position position) {
         return grid.get(position) == null;
     }
 
+    /**
+     * isDecor check if the decor of a position can be browsed by a character
+     * @param position is the position that we want to check
+     * @return a boolean with the methods cantBeOn of the class Decor
+     * @see Decor
+     */
     public boolean isDecor(Position position){
         if(isEmpty(position)) return false;
         Decor decor = grid.get(position);
-        return decor.cantBeOn(decor);
+        return decor.cantBeOn();
     }
 
+    /**
+     * isNextOpenDoor look if the decor of a position is a next open doOr
+     * @param position is the position that we want check
+     * @return a boolean
+     */
     public boolean isNextOpenDoor(Position position){
         Decor decor = get(position);
-        if(!isEmpty(position)) return decor.isOpenNextDoor(decor);
+        if(!isEmpty(position)) return decor.isOpenNextDoor();
         return false;
     }
 
+    /**
+     * IsPrevOpenDoor look if the decor of a position is a previous open door
+     * @param position is the position that we want to check
+     * @return a boolean
+     */
     public boolean isPrevOpenDoor(Position position){
         Decor decor = get(position);
-        if(!isEmpty(position)) return decor.isOpenPrevDoor(decor);
+        if(!isEmpty(position)) return decor.isOpenPrevDoor();
         return false;
     }
 }
