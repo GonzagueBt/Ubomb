@@ -15,7 +15,7 @@ public enum WorldEntity {
     Monster('M'),
     DoorPrevOpened('V'),
     DoorNextOpened('N'),
-    DoorNextClosed('n'),
+    DoorCloseNext('n'),
     Player('P'),
     Stone('S'),
     Tree('T'),

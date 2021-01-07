@@ -17,12 +17,12 @@ public class Decor extends Entity {
     }
 
     public boolean bombCanDestroy (){
-        if(isOpenNextDoor(this) || cantBeOn(this) || isOpenDoor(this) || isPrincess(this) || isKey(this)) return false;
+        if(isOpenNextDoor(this) || cantBeOn(this) || isOpenPrevDoor(this) || isPrincess(this) || isKey(this)) return false;
         return true;
     }
 
     public boolean stopExplosion(){
-        if(cantBeOn(this) || isBox(this) || isOpenDoor(this) || isOpenNextDoor(this)) return true;
+        if(cantBeOn(this) || isBox(this) || isOpenPrevDoor(this) || isOpenNextDoor(this)) return true;
         return false;
     }
     public boolean isHeart (Decor decor){
@@ -35,8 +35,8 @@ public class Decor extends Entity {
         return decor instanceof Key;
     }
     public boolean isBox (Decor decor) { return decor instanceof Box; }
-    public boolean isOpenDoor (Decor decor){
-        return decor instanceof DoorOpenPrev;
+    public boolean isOpenPrevDoor(Decor decor){
+        return decor instanceof DoorPrevOpened;
     }
     public boolean isCloseDoor (Decor decor){
         return decor instanceof DoorCloseNext;
@@ -54,7 +54,7 @@ public class Decor extends Entity {
         return decor instanceof BombRangeInc;
     }
     public boolean isOpenNextDoor (Decor decor){
-        return decor instanceof DoorCloseNext;
+        return decor instanceof DoorNextOpened;
     }
 
 }

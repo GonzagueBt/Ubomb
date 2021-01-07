@@ -76,7 +76,7 @@ public class Parser{
             case '+' -> WorldEntity.BombNumberInc;
             case '<' -> WorldEntity.BombRangeDec;
             case '>' -> WorldEntity.BombRangeInc;
-            case 'n' -> WorldEntity.DoorNextClosed;
+            case 'n' -> WorldEntity.DoorCloseNext;
             case 'V' -> WorldEntity.DoorPrevOpened;
             case 'M' -> WorldEntity.Monster;
             default -> null;

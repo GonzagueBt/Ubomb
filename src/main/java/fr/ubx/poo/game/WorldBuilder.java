@@ -36,9 +36,9 @@ public class WorldBuilder {
             case BombNumberInc -> new BombNumberInc();
             case BombRangeDec -> new BombRangeDec();
             case BombRangeInc -> new BombRangeInc();
-            case DoorNextClosed -> new DoorCloseNext();
-            case DoorNextOpened -> new DoorOpenNext();
-            case DoorPrevOpened -> new DoorOpenPrev();
+            case DoorCloseNext -> new DoorCloseNext();
+            case DoorNextOpened -> new DoorNextOpened();
+            case DoorPrevOpened -> new DoorPrevOpened();
             default -> null;
         };
     }

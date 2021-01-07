@@ -41,9 +41,9 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(BOMBRANGEINC), position);
         if (decor instanceof DoorCloseNext)
             return new SpriteDecor(layer, factory.get(DOOR_CLOSED), position);
-        if (decor instanceof DoorOpenPrev)
+        if (decor instanceof DoorPrevOpened)
             return new SpriteDecor(layer, factory.get(DOOR_OPEN), position);
-        if (decor instanceof DoorOpenNext)
+        if (decor instanceof DoorNextOpened)
             return new SpriteDecor(layer, factory.get(DOOR_OPEN), position);
         throw new RuntimeException("Unsupported sprite for decor " + decor);
     }

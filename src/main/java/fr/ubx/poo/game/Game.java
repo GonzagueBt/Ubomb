@@ -17,66 +17,77 @@ import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Player;
 
 public class Game {
-    private final World world;
+    private final ArrayList<World> world= new ArrayList<>(); // to register all levels
     private final Player player;
-    private ArrayList<Monster> monsters = new ArrayList<>();
-    private ArrayList<Bomb> bombs = new ArrayList<>();
     private final String worldPath;
-    public int initPlayerLives;
-    public int numberlevel;
-    private int actualLevel=1;
-    private boolean changeWorld = false;
+    private int initPlayerLives;
+    private int numberlevel; // allow to create all levels at the beginning
+    private int actualLevel=1; // indicates the level who is the player
+    private boolean changeLevel = false;
+    private int maxlevel = 1 ; // to indicates the bigger levels that the player has already visited
 
-    public Game(String worldPath) {
+    public Game(String worldPath){
         this.worldPath = worldPath;
         loadConfig(worldPath);
-        world = new World(actualLevel);
-        Position positionPlayer = null;
+        this.world.add(null);
+        World first = new World(actualLevel);
+        this.world.add(first);
+        findMonsters(actualLevel);
+        // creation of all levels
+        for(int i=2 ; i<=numberlevel ; i++){
+            newLevel(i);
+        }
         try {
-            if(actualLevel==1) positionPlayer = world.findPlayer();
-            else positionPlayer = world.startPlayer();
+            Position positionPlayer = first.findPlayer();
             player = new Player(this, positionPlayer);
-            findMonsters();
         } catch (PositionNotFoundException e) {
             System.err.println("Position not found : " + e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
     }
 
-    public void findMonsters(){
-        for (int x = 0; x < getWorld().dimension.width; x++) {
-            for (int y = 0; y < getWorld().dimension.height; y++) {
-                if (getWorld().getRaw()[y][x].equals(WorldEntity.Monster)){
-                    monsters.add(new Monster(this, new Position(x, y)));
+    // getters and setters //
+    public boolean isChangeLevel() { return changeLevel; }
+    public void setChangeLevel(boolean changeLevel) { this.changeLevel = changeLevel; }
+    public int getInitPlayerLives() { return initPlayerLives; }
+    public int getActualLevel() { return actualLevel; }
+    public ArrayList<World> getWorld() { return world; }
+    public Player getPlayer() { return this.player; }
+    public int getMaxlevel() { return maxlevel; }
+    // getters and setters //
+
+    // create a new level //
+    public void newLevel(int index){
+        World world = new World(index) ;
+        this.world.add(world);
+        findMonsters(index);
+    }
+
+    // find and create monsters of a level //
+    public void findMonsters(int level){
+        for (int x = 0; x < getWorld().get(level).dimension.width; x++) {
+            for (int y = 0; y < getWorld().get(level).dimension.height; y++) {
+                if (getWorld().get(level).getRaw()[y][x].equals(WorldEntity.Monster)){
+                    getWorld().get(level).getMonsters().add(new Monster(this, new Position(x, y), level));
                 }
             }
         }
     }
 
+    // create a bomb on the case of the player only if any bomb is already is the case //
     public void createBomb(){
-        Bomb bomb = new Bomb(this, player.getPosition());
-        player.setBomb(player.getBomb()-1);
-        bombs.add(bomb);
-    }
-
-    public boolean isChangeWorld() {
-        return changeWorld;
-    }
-
-    public void setChangeWorld(boolean changeWorld) {
-        this.changeWorld = changeWorld;
-    }
-
-    public int getInitPlayerLives() {
-        return initPlayerLives;
-    }
-
-    public ArrayList<Monster> getMonsters() {
-        return monsters;
-    }
-
-    public ArrayList<Bomb> getBombs() {
-        return bombs;
+        boolean canBomb = true;
+        for(int i=0; i<getWorld().get(actualLevel).getBombs().size() ; i++){
+            if (getWorld().get(actualLevel).getBombs().get(i).getPosition().equals(player.getPosition())) {
+                canBomb = false;
+                break;
+            }
+        }
+        if(canBomb) {
+            Bomb bomb = new Bomb(this, player.getPosition(), actualLevel);
+            player.setBomb(player.getBomb() - 1);
+            getWorld().get(actualLevel).getBombs().add(bomb);
+        }
     }
 
     private void loadConfig(String path) {
@@ -91,20 +102,55 @@ public class Game {
         }
     }
 
-    public World getWorld() {
-        return world;
+    // update the world : change the level if  the player is on an open door //
+    public void update (){
+        if(getWorld().get(actualLevel).isPrevOpenDoor(player.getPosition())){
+            actualLevel--;
+            player.setPosition(getWorld().get(actualLevel).startPlayer(1));
+            changeLevel =true;
+        }
+        else if(getWorld().get(actualLevel).isNextOpenDoor(player.getPosition())) {
+            actualLevel++;
+            if(actualLevel>maxlevel) maxlevel=actualLevel;
+            player.setPosition(getWorld().get(actualLevel).startPlayer(0));
+            changeLevel =true;
+        }
     }
 
-    public Player getPlayer() {
-        return this.player;
+    // update all bombs
+    public void updateBombs(long now){
+        for(int level=1 ; level<=maxlevel ; level++) {
+            int number= getWorld().get(level).getBombs().size();
+            int cpt=0;
+            while (cpt < number) {
+                getWorld().get(level).getBombs().get(cpt).update(now);
+                if (getWorld().get(level).getBombs().get(cpt).getNumber() == 5) {
+                    getWorld().get(level).getBombs().get(cpt).explosion();
+                    getWorld().get(level).getBombs().remove(cpt);
+                    player.setBomb(player.getBomb() + 1);
+                    number--;
+                } else cpt++;
+            }
+        }
     }
 
-    public void update (long now){
-        int oldLevel = actualLevel;
-        if(player.isNextOpenDoor()) actualLevel ++;
-        if(player.isPrevOpenDoor()) actualLevel = actualLevel-1;
-        //world.update(actualLevel, oldLevel);
-        //findMonsters();
+    // update all monsters of all word
+    public void updateMonsters(long now){
+        for(int level=1 ; level<=maxlevel ; level++) {
+            int number = getWorld().get(level).getMonsters().size();
+            int cpt = 0;
+            while (cpt < number) {
+                //if a monster is touch by a bomb, he is destroy
+                if (!(getWorld().get(level)).getMonsters().get(cpt).isAlive()) {
+                    getWorld().get(level).getMonsters().remove(cpt);
+                    number--;
+                    // else he is updates
+                } else {
+                    getWorld().get(level).getMonsters().get(cpt).update(now);
+                    cpt++;
+                }
+            }
+        }
     }
 
 }
