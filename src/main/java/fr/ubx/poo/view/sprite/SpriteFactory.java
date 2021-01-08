@@ -19,31 +19,31 @@ public final class SpriteFactory {
 
     public static Sprite createDecor(Pane layer, Position position, Decor decor) {
         ImageFactory factory = ImageFactory.getInstance();
-        if (decor instanceof Stone)
+        if (decor.isStone())
             return new SpriteDecor(layer, factory.get(STONE), position);
-        if (decor instanceof Tree)
+        if (decor.isTree())
             return new SpriteDecor(layer, factory.get(TREE), position);
-        if (decor instanceof Box)
+        if (decor.isBox())
             return new SpriteDecor(layer, factory.get(BOX), position);
-        if (decor instanceof Key)
+        if (decor.isKey())
             return new SpriteDecor(layer, factory.get(KEY), position);
-        if (decor instanceof Princess)
+        if (decor.isPrincess())
             return new SpriteDecor(layer, factory.get(PRINCESS), position);
-        if (decor instanceof Heart)
+        if (decor.isHeart())
             return new SpriteDecor(layer, factory.get(HEART), position);
-        if (decor instanceof  BombNumberDec)
+        if (decor.isBNDec())
             return new SpriteDecor(layer, factory.get(BOMBNUMBERDEC), position);
-        if (decor instanceof  BombNumberInc)
+        if (decor.isBNInc())
             return new SpriteDecor(layer, factory.get(BOMBNUMBERINC), position);
-        if (decor instanceof  BombRangeDec)
+        if (decor.isBRDec())
             return new SpriteDecor(layer, factory.get(BOMBRANGEDEC), position);
-        if (decor instanceof  BombRangeInc)
+        if (decor.isBRInc())
             return new SpriteDecor(layer, factory.get(BOMBRANGEINC), position);
-        if (decor instanceof DoorCloseNext)
+        if (decor.isCloseDoor())
             return new SpriteDecor(layer, factory.get(DOOR_CLOSED), position);
-        if (decor instanceof DoorPrevOpened)
+        if (decor.isOpenPrevDoor())
             return new SpriteDecor(layer, factory.get(DOOR_OPEN), position);
-        if (decor instanceof DoorNextOpened)
+        if (decor.isOpenNextDoor())
             return new SpriteDecor(layer, factory.get(DOOR_OPEN), position);
         throw new RuntimeException("Unsupported sprite for decor " + decor);
     }

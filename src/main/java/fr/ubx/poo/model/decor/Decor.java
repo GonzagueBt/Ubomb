@@ -17,7 +17,7 @@ public class Decor extends Entity {
      * @return a boolean
      */
     public boolean cantBeOn (){
-        if(this instanceof Stone || this instanceof Tree || (this instanceof DoorCloseNext)) return true;
+        if(isStone() || isTree() || this.isCloseDoor()) return true;
         return false;
     }
 
@@ -44,6 +44,8 @@ public class Decor extends Entity {
     /**
      * methods to know what kind of decor this decor his
      */
+    public boolean isStone () { return this instanceof Stone; }
+    public boolean isTree () { return this instanceof Tree; }
     public boolean isHeart (){
         return this instanceof Heart;
     }
@@ -54,26 +56,13 @@ public class Decor extends Entity {
         return this instanceof Key;
     }
     public boolean isBox () { return this instanceof Box; }
-    public boolean isOpenPrevDoor(){
-        return this instanceof DoorPrevOpened;
-    }
-    public boolean isCloseDoor (){
-        return this instanceof DoorCloseNext;
-    }
     public boolean isBNDec (){
-        return this instanceof BombNumberDec;
+        return this instanceof BombNumber && !((BombNumber) this).isIncrease();
     }
-    public boolean isBNInc (){
-        return this instanceof BombNumberInc;
-    }
-    public boolean isBRDec (){
-        return this instanceof BombRangeDec;
-    }
-    public boolean isBRInc (){
-        return this instanceof BombRangeInc;
-    }
-    public boolean isOpenNextDoor (){
-        return this instanceof DoorNextOpened;
-    }
-
+    public boolean isBNInc (){ return this instanceof BombNumber && ((BombNumber) this).isIncrease(); }
+    public boolean isBRDec (){ return this instanceof BombRange && !((BombRange) this).isIncrease(); }
+    public boolean isBRInc (){ return this instanceof BombRange && ((BombRange) this).isIncrease(); }
+    public boolean isOpenNextDoor (){ return this instanceof Door && ((Door) this).isOpen() && ((Door) this).isNext(); }
+    public boolean isOpenPrevDoor(){ return this instanceof Door && ((Door) this).isOpen() && !((Door) this).isNext(); }
+    public boolean isCloseDoor (){ return this instanceof Door && !((Door) this).isOpen(); }
 }

@@ -7,9 +7,8 @@ package fr.ubx.poo.model.go.character;
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.Movable;
-import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
-import fr.ubx.poo.model.decor.DoorNextOpened;
+import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
@@ -142,7 +141,7 @@ public class Player extends GameObject implements Movable {
         // only if player has a key and look a close door
         if(!game.getWorld().get(game.getActualLevel()).isEmpty(position) && decor.isCloseDoor()){
             if(key>0){
-                game.getWorld().get(game.getActualLevel()).set(position, new DoorNextOpened());
+                game.getWorld().get(game.getActualLevel()).set(position, new Door(true, true));
                 key--;
                 game.getWorld().get(game.getActualLevel()).setChanged(true);
             }

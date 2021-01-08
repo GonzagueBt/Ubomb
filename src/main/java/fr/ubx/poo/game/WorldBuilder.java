@@ -32,13 +32,13 @@ public class WorldBuilder {
             case Key -> new Key();
             case Princess -> new Princess();
             case Heart -> new Heart();
-            case BombNumberDec -> new BombNumberDec();
-            case BombNumberInc -> new BombNumberInc();
-            case BombRangeDec -> new BombRangeDec();
-            case BombRangeInc -> new BombRangeInc();
-            case DoorCloseNext -> new DoorCloseNext();
-            case DoorNextOpened -> new DoorNextOpened();
-            case DoorPrevOpened -> new DoorPrevOpened();
+            case BombNumberDec -> new BombNumber(false);
+            case BombNumberInc -> new BombNumber(true);
+            case BombRangeDec -> new BombRange(false);
+            case BombRangeInc -> new BombRange(true);
+            case DoorCloseNext -> new Door(false, true);
+            case DoorNextOpened -> new Door(true, true);
+            case DoorPrevOpened -> new Door(true, false);
             default -> null;
         };
     }
