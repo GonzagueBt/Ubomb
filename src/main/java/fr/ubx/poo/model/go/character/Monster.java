@@ -100,4 +100,5 @@ public class Monster extends GameObject implements Movable {
     public boolean isBlocked(){
         return !canMove(Direction.S) && !canMove(Direction.N) && !canMove(Direction.E) && !canMove(Direction.W);
     }
+
 }

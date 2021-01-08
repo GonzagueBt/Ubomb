@@ -39,7 +39,12 @@ public enum ImageResource {
     BOMB2("bomb2.png"),
     BOMB3("bomb3.png"),
     BOMB4("bomb4.png"),
-    EXPLOSION("explosion.png");
+    EXPLOSION("explosion.png"),
+    PLAYER_DOWN_TRANSP("player_down_transparent.png"),
+    PLAYER_LEFT_TRANSP("player_left_transparent.png"),
+    PLAYER_UP_TRANSP ("player_up_transparent.png"),
+    PLAYER_RIGHT_TRANSP("player_right_transparent.png");
+
     ;
 
     private final String FileName;

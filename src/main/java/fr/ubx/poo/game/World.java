@@ -121,6 +121,20 @@ public class World {
     }
 
     /**
+     * isMonster check if there is a Monster in this world at a position
+     * Used in Player, in method processMove to see if the Player loose a life
+     * @see fr.ubx.poo.model.go.character.Player
+     * @param position is the position that we want to check
+     * @return a boolean
+     */
+    public boolean isMonster(Position position){
+        for(int monster=0 ; monster<monsters.size() ; monster++) {
+            if(monsters.get(monster).getPosition().equals(position)) return true;
+        }
+        return false;
+    }
+
+    /**
      * isNextOpenDoor look if the decor of a position is a next open doOr
      * @param position is the position that we want check
      * @return a boolean

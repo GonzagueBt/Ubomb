@@ -12,6 +12,8 @@ import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
+import java.util.ArrayList;
+
 public class Player extends GameObject implements Movable {
     private boolean alive = true;
     Direction direction;
@@ -35,12 +37,6 @@ public class Player extends GameObject implements Movable {
 
     // getters and setters //
     public int getLives() { return lives; }
-    public void setLives(int lives) {
-        if(lives<this.lives){ // for invulnerability during one second
-            if(invulnerable!=0) return;
-            else invulnerable=System.currentTimeMillis(); }
-        this.lives = lives;
-    }
     public int getBomb() { return Bomb; }
     public void setBomb(int bomb) { Bomb = bomb; }
     public int getBombRange() { return BombRange; }
@@ -50,8 +46,16 @@ public class Player extends GameObject implements Movable {
     public boolean isWinner() { return winner; }
     public boolean isLooseBomb() { return looseBomb; }
     public void setLooseBomb(boolean looseBomb) { this.looseBomb = looseBomb; }
+    public long getInvulnerable() { return invulnerable; }
     // getters and setters //
 
+    public void processLife(int lives){
+        if(lives<this.lives){ // for invulnerability during one second
+            if(invulnerable!=0) return;
+            invulnerable=System.currentTimeMillis();
+        }
+        this.lives = lives;
+    }
 
     public void requestMove(Direction direction) {
         if (direction != this.direction) {
@@ -85,13 +89,18 @@ public class Player extends GameObject implements Movable {
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         if(!game.getWorld().get(game.getActualLevel()).isEmpty(nextPos)) processMove(nextPos);
+
+        // check if there is a Monster on the next position : player lose a life if it's the case
+        if (game.getWorld().get(game.getActualLevel()).isMonster(nextPos)) {
+            if (invulnerable == 0) {invulnerable = System.currentTimeMillis(); lives--;}
+        }
+        //
         setPosition(nextPos);
     }
 
     /**
      * Treat all things that can happen when the player makes a move :
      * winner ; lives ; win or loose a bomb ; increase or decrease the range of bombs ; win a key ; move a box
-     * lose a life because of a monster
      * @see Decor many methods used to compare 2 decors
      * @param position the position where the player makes his moves
      */
@@ -110,7 +119,7 @@ public class Player extends GameObject implements Movable {
         }
 
         //increase number of bomb
-        if(decor.isBNInc()){ game.getWorld().get(game.getActualLevel()).clear(position); this.Bomb++; }
+        if(decor.isBNInc()){ game.getWorld().get(game.getActualLevel()).clear(position); this.Bomb++;}
 
         // decrease range of bomb
         if(decor.isBRDec()){ game.getWorld().get(game.getActualLevel()).clear(position); if(BombRange>1) this.BombRange--; }
@@ -119,7 +128,7 @@ public class Player extends GameObject implements Movable {
         if(decor.isBRInc()){ game.getWorld().get(game.getActualLevel()).clear(position); this.BombRange++; }
 
         //Win a key
-        if(decor.isKey()){ game.getWorld().get(game.getActualLevel()).clear(position); this.key++; }
+        if(decor.isKey()){ game.getWorld().get(game.getActualLevel()).clear(position); this.key++;}
 
         //move a Box
         if(!game.getWorld().get(game.getActualLevel()).isEmpty(position) && game.getWorld().get(game.getActualLevel()).
@@ -127,13 +136,6 @@ public class Player extends GameObject implements Movable {
             Position nextPos2 = direction.nextPosition(getPosition(),2);
             game.getWorld().get(game.getActualLevel()).set(nextPos2, game.getWorld().get(game.getActualLevel()).get(position));
             game.getWorld().get(game.getActualLevel()).clear(position);
-        }
-        // lose a life if player is on the case of a monster
-        // FIXME: 07/01/2021 ne fonctionne plus depuis que le changment de monde fonctionne
-        for (int i = 0; i < game.getWorld().get(game.getActualLevel()).getMonsters().size(); i++) {
-            if(getPosition().equals(game.getWorld().get(game.getActualLevel()).getMonsters().get(i).getPosition())){
-                lives--;
-            }
         }
         // to indicate that it's needs to refresh sprites decor
         game.getWorld().get(game.getActualLevel()).setChanged(true);

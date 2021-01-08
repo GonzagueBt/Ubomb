@@ -20,6 +20,7 @@ public class SpritePlayer extends SpriteGameObject {
     @Override
     public void updateImage() {
         Player player = (Player) go;
-        setImage(ImageFactory.getInstance().getPlayer(player.getDirection()));
+        if(player.getInvulnerable()!=0) setImage(ImageFactory.getInstance().getPlayerTransp(player.getDirection()));
+        else setImage(ImageFactory.getInstance().getPlayer(player.getDirection()));
     }
 }

@@ -48,7 +48,7 @@ public class Bomb extends GameObject{
             if(getPosition().equals(game.getWorld().get(level).getMonsters().get(j).getPosition())) {
                 game.getWorld().get(level).getMonsters().get(j).setAlive(false); }
         }
-        if(getPosition().equals(game.getPlayer().getPosition())) game.getPlayer().setLives(game.getPlayer().getLives()-1);
+        if(getPosition().equals(game.getPlayer().getPosition())) game.getPlayer().processLife(game.getPlayer().getLives()-1);
         Decor decor = game.getWorld().get(level).get(getPosition());
         if(!game.getWorld().get(level).isEmpty(getPosition()) && game.getWorld().get(level).isInside(getPosition())){
             if(decor.bombCanDestroy()) {
@@ -105,7 +105,7 @@ public class Bomb extends GameObject{
             }
             // we check if the player is on the case
             if(pos.equals(game.getPlayer().getPosition())) {
-                game.getPlayer().setLives(game.getPlayer().getLives()-1);
+                game.getPlayer().processLife(game.getPlayer().getLives()-1);
             }
         }
         return memory;

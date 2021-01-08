@@ -15,6 +15,7 @@ public final class ImageFactory {
     private final ImageResource[] directions = new ImageResource[]{
             // Direction { N, E, S, W }
             PLAYER_UP, PLAYER_RIGHT, PLAYER_DOWN, PLAYER_LEFT,
+            PLAYER_UP_TRANSP, PLAYER_RIGHT_TRANSP, PLAYER_DOWN_TRANSP, PLAYER_LEFT_TRANSP,
     };
 
     private final ImageResource[] monster_directions = new ImageResource[]{
@@ -71,6 +72,9 @@ public final class ImageFactory {
 
     public Image getPlayer(Direction direction) {
         return get(directions[direction.ordinal()]);
+    }
+    public Image getPlayerTransp(Direction direction) {
+        return get(directions[direction.ordinal()+4]);
     }
 
     public Image getMonster(Direction direction) { return get(monster_directions[direction.ordinal()]);}
