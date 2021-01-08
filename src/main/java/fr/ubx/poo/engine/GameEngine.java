@@ -104,7 +104,8 @@ public final class GameEngine {
         }
         if(input.isBomb() && player.getBomb()>0){
             game.createBomb();
-            spriteBombs.add(SpriteFactory.createBomb(layer, game.getWorld().get(game.getActualLevel()).getBombs().get(game.getWorld().get(game.getActualLevel()).getBombs().size()-1)));
+            spriteBombs.add(SpriteFactory.createBomb(layer, game.getWorld().get(game.getActualLevel()).getBombs().
+                    get(game.getWorld().get(game.getActualLevel()).getBombs().size()-1)));
         }
         if (input.isMoveDown()) {
             player.requestMove(Direction.S);
@@ -164,19 +165,22 @@ public final class GameEngine {
         game.updateMonsters(now);
         spriteMonsters.forEach(Sprite::remove);
         spriteMonsters.clear();
-        game.getWorld().get(game.getActualLevel()).getMonsters().forEach(monster -> spriteMonsters.add(SpriteFactory.createMonster(layer, monster)));
+        game.getWorld().get(game.getActualLevel()).getMonsters().forEach(monster ->
+                spriteMonsters.add(SpriteFactory.createMonster(layer, monster)));
 
         //update Bomb
         game.updateBombs(now);
         spriteBombs.forEach(Sprite::remove);
         spriteBombs.clear();
-        game.getWorld().get(game.getActualLevel()).getBombs().forEach(bomb -> spriteBombs.add(SpriteFactory.createBomb(layer, bomb)));
+        game.getWorld().get(game.getActualLevel()).getBombs().forEach(bomb ->
+                spriteBombs.add(SpriteFactory.createBomb(layer, bomb)));
 
         // update decor
         if(game.getWorld().get(game.getActualLevel()).isChanged()){
             sprites.forEach(Sprite::remove);
             sprites.clear();
-            game.getWorld().get(game.getActualLevel()).forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+            game.getWorld().get(game.getActualLevel()).forEach( (pos,d) ->
+                    sprites.add(SpriteFactory.createDecor(layer, pos, d)));
             game.getWorld().get(game.getActualLevel()).setChanged(false);
         }
 

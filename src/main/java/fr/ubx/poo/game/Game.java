@@ -23,7 +23,7 @@ public class Game {
     private int initPlayerLives;
     private int numberlevel; // allow to create all levels at the beginning
     private int actualLevel=1; // indicates the level who is the player
-    private boolean changeLevel = false; //if the player has change of level with his last move
+    private boolean changeLevel = false; //if the player has change of level during his last move
     private int maxlevel = 1 ; // to indicates the bigger levels that the player has already visited
 
     public Game(String worldPath){
@@ -46,6 +46,19 @@ public class Game {
         }
     }
 
+
+    private void loadConfig(String path) {
+        try (InputStream input = new FileInputStream(new File(path, "config.properties"))) {
+            Properties prop = new Properties();
+            // load the configuration file
+            prop.load(input);
+            initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
+            numberlevel = Integer.parseInt(prop.getProperty("levels", "3"));
+        } catch (IOException ex) {
+            System.err.println("Error loading configuration");
+        }
+    }
+
     // getters and setters //
     public boolean isChangeLevel() { return changeLevel; }
     public void setChangeLevel(boolean changeLevel) { this.changeLevel = changeLevel; }
@@ -54,6 +67,7 @@ public class Game {
     public ArrayList<World> getWorld() { return world; }
     public Player getPlayer() { return this.player; }
     public int getMaxlevel() { return maxlevel; }
+    public int getNumberlevel() { return numberlevel; }
     // getters and setters //
 
     // create a new level //
@@ -106,18 +120,6 @@ public class Game {
             Bomb bomb = new Bomb(this, player.getPosition(), actualLevel);
             player.setBomb(player.getBomb() - 1);
             getWorld().get(actualLevel).getBombs().add(bomb);
-        }
-    }
-
-    private void loadConfig(String path) {
-        try (InputStream input = new FileInputStream(new File(path, "config.properties"))) {
-            Properties prop = new Properties();
-            // load the configuration file
-            prop.load(input);
-            initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
-            numberlevel = Integer.parseInt(prop.getProperty("levels", "3"));
-        } catch (IOException ex) {
-            System.err.println("Error loading configuration");
         }
     }
 
@@ -187,7 +189,7 @@ public class Game {
                     number--;
                     // else he is updates
                 } else {
-                    getWorld().get(level).getMonsters().get(cpt).update(now);
+                    getWorld().get(level).getMonsters().get(cpt).update(now, -1);
                     cpt++;
                 }
             }

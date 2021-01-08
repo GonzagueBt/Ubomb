@@ -34,7 +34,8 @@ public class Bomb extends GameObject{
     public void explosion(){
         // On the case of the bomb //
         for(int j=0 ; j< game.getWorld().get(level).getMonsters().size() ; j++){
-            if(getPosition().equals(game.getWorld().get(level).getMonsters().get(j).getPosition())) game.getWorld().get(level).getMonsters().get(j).setAlive(false);
+            if(getPosition().equals(game.getWorld().get(level).getMonsters().get(j).getPosition())) {
+                game.getWorld().get(level).getMonsters().get(j).setAlive(false); }
         }
         if(getPosition().equals(game.getPlayer().getPosition())) game.getPlayer().setLives(game.getPlayer().getLives()-1);
         Decor decor = game.getWorld().get(level).get(getPosition());
@@ -81,14 +82,20 @@ public class Bomb extends GameObject{
             }
             // check if there is a monster on the case who has to be destroy
             for(int j=0 ; j< world.getMonsters().size() ; j++){
-                if(pos.equals(world.getMonsters().get(j).getPosition())) game.getWorld().get(level).getMonsters().get(j).setAlive(false);
+                if(pos.equals(world.getMonsters().get(j).getPosition())) {
+                    game.getWorld().get(level).getMonsters().get(j).setAlive(false);
+                }
             }
             // check if there is a bomb on the case who has to be destroy
             for(int j=0 ; j< world.getBombs().size() ; j++){
-                if(pos.equals(world.getBombs().get(j).getPosition())) game.getWorld().get(level).getBombs().get(j).number=4;
+                if(pos.equals(world.getBombs().get(j).getPosition())) {
+                    game.getWorld().get(level).getBombs().get(j).number=4;
+                }
             }
             // we check if the player is on the case
-            if(pos.equals(game.getPlayer().getPosition())) game.getPlayer().setLives(game.getPlayer().getLives()-1);
+            if(pos.equals(game.getPlayer().getPosition())) {
+                game.getPlayer().setLives(game.getPlayer().getLives()-1);
+            }
         }
         return memory;
     }

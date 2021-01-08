@@ -24,7 +24,7 @@ public class Player extends GameObject implements Movable {
     // object owned by player
     private int Bomb=1;
     private int BombRange= 1;
-    private int key=0;
+    private int key=2;
 
     public Player(Game game, Position position) {
         super(game, position);
@@ -33,9 +33,7 @@ public class Player extends GameObject implements Movable {
     }
 
     // getters and setters //
-    public int getLives() {
-        return lives;
-    }
+    public int getLives() { return lives; }
     public void setLives(int lives) {
         if(lives<this.lives){ // for invulnerability during one second
             if(invulnerable!=0) return;
@@ -61,14 +59,17 @@ public class Player extends GameObject implements Movable {
 
     public boolean canMove(Direction direction) {
         // isInside and isDecor
-        if(!game.getWorld().get(game.getActualLevel()).isInside(direction.nextPosition(getPosition())) || game.getWorld().get(game.getActualLevel()).isDecor(direction.nextPosition(getPosition()))){
+        if(!game.getWorld().get(game.getActualLevel()).isInside(direction.nextPosition(getPosition())) ||
+                game.getWorld().get(game.getActualLevel()).isDecor(direction.nextPosition(getPosition()))){
             return false;
         }
         // deal with box
         Position nextPos = direction.nextPosition(getPosition());
-        if(!game.getWorld().get(game.getActualLevel()).isEmpty(nextPos) && game.getWorld().get(game.getActualLevel()).get(nextPos) instanceof Box) {
+        if(!game.getWorld().get(game.getActualLevel()).isEmpty(nextPos) && game.getWorld().get(game.getActualLevel()).
+                get(nextPos).isBox()) {
             for(int i=0 ; i<game.getWorld().get(game.getActualLevel()).getMonsters().size() ; i++){
-                if(game.getWorld().get(game.getActualLevel()).getMonsters().get(i).getPosition().equals(direction.nextPosition(getPosition(), 2))){
+                if(game.getWorld().get(game.getActualLevel()).getMonsters().get(i).getPosition().equals
+                        (direction.nextPosition(getPosition(), 2))){
                     return false;
                 }
             }
@@ -94,46 +95,35 @@ public class Player extends GameObject implements Movable {
     private void processMove(Position position){
         Decor decor = game.getWorld().get(game.getActualLevel()).get(position);
         // WINNER
-        if(decor.isPrincess()){
-            this.winner=true;
-        }
+        if(decor.isPrincess()){ this.winner=true; }
+
         //Win a Heart
-        if(decor.isHeart()){
-            game.getWorld().get(game.getActualLevel()).clear(position);
-            this.lives++;
-        }
+        if(decor.isHeart()){ game.getWorld().get(game.getActualLevel()).clear(position); this.lives++; }
+
         // decrease number of bomb
-        if(decor.isBNDec()){
-            game.getWorld().get(game.getActualLevel()).clear(position);
-            if(Bomb>1) this.Bomb--;
-        }
+        if(decor.isBNDec()){ game.getWorld().get(game.getActualLevel()).clear(position); if(Bomb>1) this.Bomb--; }
+
         //increase number of bomb
-        if(decor.isBNInc()){
-            game.getWorld().get(game.getActualLevel()).clear(position);
-            this.Bomb++;
-        }
+        if(decor.isBNInc()){ game.getWorld().get(game.getActualLevel()).clear(position); this.Bomb++; }
+
         // decrease range of bomb
-        if(decor.isBRDec()){
-            game.getWorld().get(game.getActualLevel()).clear(position);
-            if(BombRange>1) this.BombRange--;
-        }
+        if(decor.isBRDec()){ game.getWorld().get(game.getActualLevel()).clear(position); if(BombRange>1) this.BombRange--; }
+
         //increase range of bomb
-        if(decor.isBRInc()){
-            game.getWorld().get(game.getActualLevel()).clear(position);
-            this.BombRange++;
-        }
+        if(decor.isBRInc()){ game.getWorld().get(game.getActualLevel()).clear(position); this.BombRange++; }
+
         //Win a key
-        if(decor.isKey()){
-            game.getWorld().get(game.getActualLevel()).clear(position);
-            this.key++;
-        }
+        if(decor.isKey()){ game.getWorld().get(game.getActualLevel()).clear(position); this.key++; }
+
         //move a Box
-        if(!game.getWorld().get(game.getActualLevel()).isEmpty(position) && game.getWorld().get(game.getActualLevel()).get(position) instanceof Box){
+        if(!game.getWorld().get(game.getActualLevel()).isEmpty(position) && game.getWorld().get(game.getActualLevel()).
+                get(position).isBox()){
             Position nextPos2 = direction.nextPosition(getPosition(),2);
             game.getWorld().get(game.getActualLevel()).set(nextPos2, game.getWorld().get(game.getActualLevel()).get(position));
             game.getWorld().get(game.getActualLevel()).clear(position);
         }
         // lose a life if player is on the case of a monster
+        // FIXME: 07/01/2021 ne fonctionne plus depuis que le changment de monde fonctionne
         for (int i = 0; i < game.getWorld().get(game.getActualLevel()).getMonsters().size(); i++) {
             if(getPosition().equals(game.getWorld().get(game.getActualLevel()).getMonsters().get(i).getPosition())){
                 lives--;
