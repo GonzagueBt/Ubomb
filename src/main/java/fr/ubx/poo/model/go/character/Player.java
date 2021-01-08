@@ -19,6 +19,8 @@ public class Player extends GameObject implements Movable {
     private int lives;
     private boolean winner;
     private long invulnerable = 0;
+    private boolean looseBomb = false; // to know if player have to doesn't get back a bomb after it's explosion
+        // (if the player has recovered a lost bomb malus)
 
     // object owned by player
     private int Bomb=1;
@@ -46,6 +48,8 @@ public class Player extends GameObject implements Movable {
     public void setKey(int key) { this.key = key; }
     public Direction getDirection() { return direction; }
     public boolean isWinner() { return winner; }
+    public boolean isLooseBomb() { return looseBomb; }
+    public void setLooseBomb(boolean looseBomb) { this.looseBomb = looseBomb; }
     // getters and setters //
 
 
@@ -57,12 +61,12 @@ public class Player extends GameObject implements Movable {
     }
 
     public boolean canMove(Direction direction) {
-        // isInside and isDecor
+        // check if the next position is inside the map and if there is no decor that the player can't run on it
         if(!game.getWorld().get(game.getActualLevel()).isInside(direction.nextPosition(getPosition())) ||
                 game.getWorld().get(game.getActualLevel()).isDecor(direction.nextPosition(getPosition()))){
             return false;
         }
-        // deal with box
+        // if there is a box on the next position, check if the box can be moved (if nothing is behind)
         Position nextPos = direction.nextPosition(getPosition());
         if(!game.getWorld().get(game.getActualLevel()).isEmpty(nextPos) && game.getWorld().get(game.getActualLevel()).
                 get(nextPos).isBox()) {
@@ -99,8 +103,11 @@ public class Player extends GameObject implements Movable {
         //Win a Heart
         if(decor.isHeart()){ game.getWorld().get(game.getActualLevel()).clear(position); this.lives++; }
 
-        // decrease number of bomb
-        if(decor.isBNDec()){ game.getWorld().get(game.getActualLevel()).clear(position); if(Bomb>1) this.Bomb--; }
+        // decrease number of bomb only if player has most that one bomb in his bag + posed on the world
+        if(decor.isBNDec()){ game.getWorld().get(game.getActualLevel()).clear(position);
+        if(Bomb>1) { this.Bomb--; }
+        else if(numberBombPosed()>1 || (numberBombPosed()==1 && Bomb==1)) looseBomb=true;
+        }
 
         //increase number of bomb
         if(decor.isBNInc()){ game.getWorld().get(game.getActualLevel()).clear(position); this.Bomb++; }
@@ -133,17 +140,19 @@ public class Player extends GameObject implements Movable {
     }
 
     /**
-     * processKey treat the input Enter, look if the player can open a close door with a key
+     * processKey treat the input [Enter], look if the player can open a close door with a key
+     * If the player can, the close door is transformed into an open next door and the player lost a key
      */
     public void processKey(){
         Position position = direction.nextPosition(getPosition());
         Decor decor = game.getWorld().get(game.getActualLevel()).get(position);
-        // only if player has a key and look a close door
+        // if player looks a close door
         if(!game.getWorld().get(game.getActualLevel()).isEmpty(position) && decor.isCloseDoor()){
-            if(key>0){
+            if(key>0){ // if the player has at least one key
                 game.getWorld().get(game.getActualLevel()).set(position, new Door(true, true));
                 key--;
-                game.getWorld().get(game.getActualLevel()).setChanged(true);
+                game.getWorld().get(game.getActualLevel()).setChanged(true); // indicates that the sprites needs to
+                    // be refresh
             }
         }
     }
@@ -161,10 +170,21 @@ public class Player extends GameObject implements Movable {
 
 
     public boolean isAlive() {
-        if(getLives()==0){
-            alive=false;
-        }
+        if(getLives()==0){ alive=false; }
         return alive;
+    }
+
+    /**
+     * numberBombPosed count all bombs posed by the player at this moment
+     * Used in processMove to know if the player must loose a bomb even if his bag is empty at the moment
+     * @return the number of bomb posed
+     */
+    public int numberBombPosed(){
+        int cpt=0;
+        for(int level=1 ; level<= game.getMaxlevel() ; level++){
+            cpt=cpt +game.getWorld().get(level).getBombs().size();
+        }
+        return cpt;
     }
 
 }

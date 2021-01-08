@@ -28,48 +28,57 @@ public class Monster extends GameObject implements Movable {
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
+    public Direction getDirection() {
+        return direction;
+    }
     // getters and setters //
 
     public boolean canMove(Direction direction) {
+        // check if the next position is inside the map and if there is no decor that the player can't run on it
         if(!game.getWorld().get(level).isInside(direction.nextPosition(getPosition())) ||
                 game.getWorld().get(level).isDecor(direction.nextPosition(getPosition()))){
             return false;
         }
         Position nextPos = direction.nextPosition(getPosition());
         Decor decor = game.getWorld().get(level).get(nextPos);
+        // check if there is not an open door in the next position (in which case, the move is possible)
         return game.getWorld().get(level).isEmpty(nextPos) || (!decor.isBox() && !decor.isOpenPrevDoor() &&
                 !decor.isOpenNextDoor());
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
-
-    @Override
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         setPosition(nextPos);
     }
 
     /**
-     * update the monster : the monster makes a move
+     * update the monster : the monster makes a move, all 2 seconds divided by the actual level (so 2 second for the
+     * first level, 1 for the second one, etc...)
+     * if it's the last level, we call the method intellingentMonster, otherwise, we choose a random move
      */
     public void update(long now, int index) {
-        if(System.currentTimeMillis()-time>2000/level) {
+        if(System.currentTimeMillis()-time>2000/level) { // check if the time between the last move is long enough
             ArrayList<Direction> directions = new ArrayList<>();
-            if(index!= -2 && game.getNumberlevel() == game.getActualLevel()) {
+            if(index!= -2 && game.getNumberlevel() == game.getActualLevel()) { // index=2 indicates that we have already
+                // try a random move (and so it's useless to try intelligentMonster)
                 if (index==-1) { directions = intelligentMonster(); index++; }
                 if(index < directions.size()) direction= directions.get(index);
-                else { direction = Direction.random(); index=-2; }
+                else { direction = Direction.random(); index=-2; } //if any move that bring the monster closer to the
+                // player is possible, we make obligatory a random move
             }
             else { direction = Direction.random(); index=-2; }// we choose a direction randomly
             if (canMove(direction)) { // if the monster can move in this direction, he moves
                 doMove(direction);
                 time = System.currentTimeMillis();
-            }else if(!isBlocked()) this.update(now, index++); // else, if he's not blocked, we call the fonction again
+            }else if(!isBlocked()) this.update(now, index++); // else, if he's not blocked, we call the method again
         }
     }
 
+    /**
+     * intelligentMonster is call in method update just for the last level, the method allow to return a direction who
+     * that will bring the monster closer to the player
+     * @return an arraylist with the possible directions who bring the monster closer to the player
+     */
     public ArrayList<Direction> intelligentMonster(){
         ArrayList<Direction> directions = new ArrayList<>();
         int xPlayer = game.getPlayer().getPosition().x;

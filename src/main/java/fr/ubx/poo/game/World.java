@@ -29,6 +29,7 @@ public class World {
         grid = WorldBuilder.build(raw, dimension);
     }
 
+    // getters and setters //
     public Decor get(Position position) {
         return grid.get(position);
     }
@@ -56,6 +57,7 @@ public class World {
     public Collection<Decor> values() {
         return grid.values();
     }
+    // getters and setters //
 
     public Position findPlayer() throws PositionNotFoundException {
         for (int x = 0; x < dimension.width; x++) {

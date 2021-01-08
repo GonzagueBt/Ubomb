@@ -39,7 +39,9 @@ public final class GameEngine {
     private Sprite spritePlayer;
     private final ArrayList<Sprite> spriteMonsters = new ArrayList<>();
     private final ArrayList<Sprite> spriteBombs = new ArrayList<>();
-    private int canChangeLevel = 0;
+    private int canChangeLevel = 0; //to prevent the player from changing world indefinitely when he is on an open door
+    // (since this takes him to another open door), we have canChangeLevel that allows the game to be updated only if the
+    // player has made 2 moves since the last world change
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;

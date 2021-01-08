@@ -70,8 +70,6 @@ public class Game {
     public int getNumberlevel() { return numberlevel; }
     // getters and setters //
 
-    // create a new level //
-
     /**
      * newLevel create a new world
      * @param level is the number of the new level
@@ -81,8 +79,6 @@ public class Game {
         this.world.add(world);
         findMonsters(level);
     }
-
-    // find and create monsters of a level //
 
     /**
      * findMonsters find and create monsters in the actual level ; the monsters is add to the Arraylist monsters in
@@ -100,8 +96,6 @@ public class Game {
             }
         }
     }
-
-    // create a bomb on the case of the player only if any bomb is already is the case //
 
     /**
      * createBomb create a new bomb, it's calls when [space] is in input
@@ -123,12 +117,10 @@ public class Game {
         }
     }
 
-    // update the world : change the level if  the player is on an open door //
-
     /**
      * update the world (so the level). Change the world if the player is on a OpenDoor with the corresponding world
-     * @changeLevel allow to indicates that it's needs to close stage and initialize again the game (with all the
-     * sprites) in the class GameEngine
+     * @changeLevel variable allow to indicates that it's needs to close stage and initialize again the game
+     * (with all the sprites) in the class GameEngine
      * @see fr.ubx.poo.engine.GameEngine
      */
     public void update (){
@@ -145,13 +137,11 @@ public class Game {
         }
     }
 
-    // update all bombs
-
     /**
      * updateBombs updates all bombs of all levels (so of each world in the arraylist world)
-     * It's begin with the update of the bomb in the class Bomb, and if it's time for the bomb to explose,
-     * the method make all the processus (call the function explosion of the class Bomb, remove the bomb and add a
-     * bomb in the bag of the player)
+     * It's begin with the update of the bomb in the class Bomb, and if it's time for the bomb to explode,
+     * the method make all the process (call the function explosion of the class Bomb, remove the bomb and add a
+     * bomb in the bag of the player only if the player doesn't have losse a bomb in his bag during the process bomb)
      * @see Bomb
      */
     public void updateBombs(long now){
@@ -163,14 +153,13 @@ public class Game {
                 if (getWorld().get(level).getBombs().get(cpt).getNumber() == 5) {
                     getWorld().get(level).getBombs().get(cpt).explosion();
                     getWorld().get(level).getBombs().remove(cpt);
-                    player.setBomb(player.getBomb() + 1);
+                    if(player.isLooseBomb()) player.setLooseBomb(false);
+                    else player.setBomb(player.getBomb() + 1);
                     number--;
                 } else cpt++;
             }
         }
     }
-
-    // update all monsters of all word
 
     /**
      * updateMonsters updates all monsters of all levels (so of each world in the arraylist world)
