@@ -12,7 +12,6 @@ import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.game.Game;
 
-import java.util.ArrayList;
 
 public class Player extends GameObject implements Movable {
     private boolean alive = true;
@@ -27,7 +26,7 @@ public class Player extends GameObject implements Movable {
     // object owned by player
     private int Bomb=1;
     private int BombRange= 1;
-    private int key=2;
+    private int key=0;
 
     public Player(Game game, Position position) {
         super(game, position);

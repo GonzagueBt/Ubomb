@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 
 public class SpritePlayer extends SpriteGameObject {
     private final ColorAdjust effect = new ColorAdjust();
+    private int transparent =0;
 
     public SpritePlayer(Pane layer, Player player) {
         super(layer, null, player);
@@ -20,7 +21,14 @@ public class SpritePlayer extends SpriteGameObject {
     @Override
     public void updateImage() {
         Player player = (Player) go;
-        if(player.getInvulnerable()!=0) setImage(ImageFactory.getInstance().getPlayerTransp(player.getDirection()));
-        else setImage(ImageFactory.getInstance().getPlayer(player.getDirection()));
+        if(player.getInvulnerable()!=0 && transparent==0) {
+            setImage(ImageFactory.getInstance().getPlayerTransp(player.getDirection()));
+            transparent++;
+        }else{
+            setImage(ImageFactory.getInstance().getPlayer(player.getDirection()));
+            transparent++;
+            if(transparent==10) transparent=0;
+        }
+
     }
 }
