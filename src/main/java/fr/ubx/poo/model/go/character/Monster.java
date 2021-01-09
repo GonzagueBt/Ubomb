@@ -31,6 +31,7 @@ public class Monster extends GameObject implements Movable {
     public Direction getDirection() {
         return direction;
     }
+    public int getLevel() { return level; }
     // getters and setters //
 
     public boolean canMove(Direction direction) {
@@ -49,7 +50,9 @@ public class Monster extends GameObject implements Movable {
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         setPosition(nextPos);
-        if(nextPos.equals(game.getPlayer().getPosition())) game.getPlayer().processLife(game.getPlayer().getLives()-1);
+        // if the plater is on the next position, he loses a life
+        if(game.getActualLevel()==level && nextPos.equals(game.getPlayer().getPosition())) {
+            game.getPlayer().processLife(game.getPlayer().getLives()-1); }
     }
 
     /**

@@ -22,7 +22,6 @@ public class Player extends GameObject implements Movable {
     private long invulnerable = 0;
     private boolean looseBomb = false; // to know if player have to doesn't get back a bomb after it's explosion
         // (if the player has recovered a lost bomb malus)
-
     // object owned by player
     private int Bomb=1;
     private int BombRange= 1;
@@ -90,7 +89,7 @@ public class Player extends GameObject implements Movable {
         if(!game.getWorld().get(game.getActualLevel()).isEmpty(nextPos)) processMove(nextPos);
 
         // check if there is a Monster on the next position : player lose a life if it's the case
-        if (game.getWorld().get(game.getActualLevel()).isMonster(nextPos)) {
+        if (game.getWorld().get(game.getActualLevel()).isMonster(nextPos, game.getActualLevel())) {
             if (invulnerable == 0) {invulnerable = System.currentTimeMillis(); lives--;}
         }
         //

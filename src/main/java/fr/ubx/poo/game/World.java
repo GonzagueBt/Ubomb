@@ -121,15 +121,15 @@ public class World {
     }
 
     /**
-     * isMonster check if there is a Monster in this world at a position
+     * isMonster check if there is a Monster in the actual world (level) at the position's player
      * Used in Player, in method processMove to see if the Player loose a life
      * @see fr.ubx.poo.model.go.character.Player
      * @param position is the position that we want to check
      * @return a boolean
      */
-    public boolean isMonster(Position position){
+    public boolean isMonster(Position position, int actualLevel){
         for(int monster=0 ; monster<monsters.size() ; monster++) {
-            if(monsters.get(monster).getPosition().equals(position)) return true;
+            if(monsters.get(monster).getLevel()== actualLevel &&monsters.get(monster).getPosition().equals(position)) return true;
         }
         return false;
     }
